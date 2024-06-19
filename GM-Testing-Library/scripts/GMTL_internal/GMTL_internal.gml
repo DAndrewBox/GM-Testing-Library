@@ -8,7 +8,6 @@ function __gmtl_internal_fn_log(_msg) {
 	_msg = _pad_left + _msg;
 	
 	gmtl_log += _msg + "\n";
-	show_debug_message(_msg);
 }
 
 /// @func	__gmtl_internal_fn_log_test_success(message, time)
@@ -231,9 +230,9 @@ function __gmtl_internal_fn_mouse_get_y() {
 	return gmtl_internal.mouse.y;
 }
 
-/// @func	__gmtl_internal_fn_get_function_index(fn)
+/// @func	__gmtl_internal_fn_get_fn_index(fn)
 /// @param	{function}	fn
-function __gmtl_internal_fn_get_function_index(_fn) {
+function __gmtl_internal_fn_get_fn_index(_fn) {
 	var _fn_to_run = -1;
 	if (is_method(_fn)) {
 		_fn_to_run = method_get_index(_fn);
@@ -251,17 +250,25 @@ function __gmtl_internal_fn_call_suite(_suite) {
 	try {
 		_suite();
 		if (gmtl_suite_last_failed) {
-			throw "Suite Failed";
+			/*throw {
+				message: $"Suite Failed on file {_GMFILE_}. Function \"{_GMFUNCTION_}\" (line {_GMLINE_}).",
+				longMessage: $"Suite Failed on file {_GMFILE_}. Function \"{_GMFUNCTION_}\" (line {_GMLINE_}).",
+			};*/
+			throw {
+				message: "",
+			};
 		}
 		gmtl_coverage_suites.success++;
 	} catch(e) {
-		var _prev_indent = gmtl_indent;
-		gmtl_indent = 2;
-		__gmtl_internal_fn_log(e);
-		gmtl_indent = _prev_indent;
-		gmtl_coverage_suites.failed++;
+		if (e.message != "") {
+			var _prev_indent = gmtl_indent;
+			gmtl_indent = 2;
+			__gmtl_internal_fn_log(e.message);
+			gmtl_indent = _prev_indent;
+			gmtl_coverage_suites.failed++;
+		}
 	} finally {
-		__gmtl_internal_fn_log("\n" + string_repeat("=", 64));
+		__gmtl_internal_fn_log(string_repeat("=", 64));
 	}
 }
 
@@ -286,4 +293,97 @@ function __gmtl_internal_fn_finish_suites(_t_start) {
 	_time = _time > 1000 ? $"{_time / 1000}s" : $"{_time}ms"
 	__gmtl_internal_fn_log($"All tests finished in {_time}.\n");
 	gmtl_internal.finished = true;
+	show_debug_message(gmtl_log);
+}
+
+/// @func	__gmtl_internal_fn_find_coverage_files()
+function __gmtl_internal_fn_find_coverage_files() {
+	var _dir_path = string_copy(GM_project_filename, 1, string_last_pos("\\", GM_project_filename));
+	var _dir_exists = directory_exists(_dir_path);
+	var _folders = [];
+	if (_dir_exists) {
+		var _file = file_find_first($"{_dir_path}scripts\\*", fa_directory);
+		while (_file != "") {
+			if !(string_pos(".", _file) > 0) {
+				array_push(_folders, _file);
+			}
+			_file = file_find_next();
+		}
+			
+		file_find_close();
+	}
+		
+	var _coverage_files = [];
+	var _folders_len = array_length(_folders);
+	for (var i = 0; i < _folders_len; i++) {
+		var _file = file_find_first($"{_dir_path}scripts\\{_folders[i]}\\*.gml", fa_none);
+		while (_file != "") {
+			array_push(_coverage_files, $"{_dir_path}scripts\\{_folders[i]}\\{_file}");
+			_file = file_find_next();
+		}
+			
+		file_find_close();
+	}
+		
+	var _files_len = array_length(_coverage_files);
+	for (var i = 0; i < _files_len; i++) {
+		var _fns = [];
+		var _file = file_text_open_read(_coverage_files[i]);
+		var _str = "";
+		while (!file_text_eof(_file)) {
+			var _cur_line = file_text_readln(_file);
+			_str += _cur_line;
+				
+			var _fn_starts_at = string_pos("function", _cur_line);
+			var _fn_ends_at = string_pos_ext("(", _cur_line, _fn_starts_at);
+			if (_fn_starts_at > 0 && _fn_ends_at > 0 && !string_pos("@func", _cur_line)) {
+				var _fn_name = string_copy(_cur_line, _fn_starts_at + 8, _fn_ends_at - (_fn_starts_at + 8));
+				_fn_name = string_trim(_fn_name);
+
+				if (string_pos("=", _fn_name)) continue;
+				if (_fn_name != "") {
+					array_push(_fns, { name: _fn_name, coverage: false });
+				}
+			}
+		}
+		if (array_length(_fns) > 0) {
+			array_sort(_fns, true);
+			var _fn_name = string_copy(
+				_coverage_files[i],
+				string_last_pos("\\", _coverage_files[i]) + 1,
+				1 + string_length(_coverage_files[i]) - string_last_pos("\\", _coverage_files[i])
+			);
+			array_push(gmtl_coverage_files, {
+				filepath: _coverage_files[i],
+				fn_name: _fn_name,
+				fn_list: _fns
+			});
+		}
+		file_text_close(_file);
+	}
+}
+
+/// @func	__gmtl_internal_fn_show_coverage_table()
+function __gmtl_internal_fn_show_coverage_table() {
+	var _coverage_len = array_length(gmtl_coverage_files);
+	show_debug_message("Coverage Results per File:");
+	for (var i = 0; i < _coverage_len; i++) {
+		var _functions = gmtl_coverage_files[i].fn_list;
+		var _functions_len = array_length(_functions);
+		gmtl_coverage_table += $"{gmtl_coverage_files[i].fn_name} (0%)\n";
+		for (var j = 0; j < _functions_len; j++) {
+			var _cols = [
+				__gmtl_dep_fn_string_pad_right(string(_functions[j].coverage), " ", 2),
+				_functions[j].name,
+			];
+			var _cols_len = array_length(_cols);
+			gmtl_coverage_table += "\t"
+			for (var k = 0; k < _cols_len; k++) {
+				gmtl_coverage_table += _cols[k] + (k == 0 ? "| " : "");
+			}
+			gmtl_coverage_table += "\n";
+		}
+	}
+	
+	show_debug_message(gmtl_coverage_table);
 }

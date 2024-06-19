@@ -53,7 +53,7 @@ function it(_name, _fn, _args = []) {
 		return;
 	}
 
-	var _fn_to_run = __gmtl_internal_fn_get_function_index(_fn);
+	var _fn_to_run = __gmtl_internal_fn_get_fn_index(_fn);
 	var _time = get_timer();
 	try {
 		if (is_callable(gmtl_test_before_each)) {

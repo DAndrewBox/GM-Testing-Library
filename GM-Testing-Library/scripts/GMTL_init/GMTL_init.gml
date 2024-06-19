@@ -17,6 +17,8 @@ function __gmtl_init() {
 			status: __gmtl_test_status.RUN,
 			before_all: noone,
 			after_all: noone,
+			before_each: noone,
+			after_each: noone,
 		},
 		suites: {
 			list:				[],
@@ -35,7 +37,9 @@ function __gmtl_init() {
 				success:	0,
 				failed:		0,
 				skipped:	0,
-			}
+			},
+			files: [],
+			table: "",
 		},
 		keys: {
 			hold:		vk_nokey,
@@ -54,13 +58,16 @@ function __gmtl_init() {
 		finished: false,
 	};
 
-	call_later(5, time_source_units_frames, function() {
+	call_later(10, time_source_units_frames, function() {
+		__gmtl_internal_fn_find_coverage_files();
+		
 		var _t_start = get_timer();
 		var _suites_len = array_length(gmtl_suite_list);
 		for (var i = 0; i < _suites_len; i++) {
 			__gmtl_internal_fn_call_suite(gmtl_suite_list[i]);
 		}
 		__gmtl_internal_fn_finish_suites(_t_start);
+		__gmtl_internal_fn_show_coverage_table();
 	});
 }
 
@@ -84,6 +91,7 @@ function __gmtl_internal_remove_syntax_errors() {
 		_ = simulateKeyRelease;
 		_ = simulateFrameWait;
 		_ = simulateEvent;
+		_ = simulateMousePosition;
 		_ = simulateMouseClickHold;
 		_ = simulateMouseClickPress;
 		_ = simulateMouseClickRelease;

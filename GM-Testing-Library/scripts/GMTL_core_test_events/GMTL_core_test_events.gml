@@ -28,28 +28,28 @@ function create(_x, _y, _obj, _params = {}) {
 /// @func	beforeAll(fn)
 /// @param	{function}	fn
 function beforeAll(_fn) {
-	_fn = __gmtl_internal_fn_get_function_index(_fn);
+	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_before_all = _fn;
 }
 
 /// @func	afterAll(fn)
 /// @param	{function}	fn
 function afterAll(_fn) {
-	_fn = __gmtl_internal_fn_get_function_index(_fn);
+	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_after_all = _fn;
 }
 
 /// @func	beforeEach(fn)
 /// @param	{function}	fn
 function beforeEach(_fn) {
-	_fn = __gmtl_internal_fn_get_function_index(_fn);
+	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_before_each = _fn;
 }
 
 /// @func	afterEach(fn)
 /// @param	{function}	fn
 function afterEach(_fn) {
-	_fn = __gmtl_internal_fn_get_function_index(_fn);
+	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_after_each = _fn;
 }
 
@@ -85,14 +85,21 @@ function simulateKeyHold(_btn) {
 	});
 }
 
+/// @func	simulateMousePosition(x, y)
+/// @param	{real}	x
+/// @param	{real}	y
+function simulateMousePosition(_x = mouse_x, _y = mouse_y) {	
+	gmtl_internal.mouse.x = _x;
+	gmtl_internal.mouse.y = _y;
+}
+
 /// @func	simulateMouseClickPress(mb_button, x, y)
 /// @param	{real}	mb_button
 /// @param	{real}	x
 /// @param	{real}	y
 function simulateMouseClickPress(_btn, _x = mouse_x, _y = mouse_y) {	
 	var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
-	gmtl_internal.mouse.x = _x;
-	gmtl_internal.mouse.y = _y;
+	simulateMousePosition(_x, _y);
 	gmtl_internal.mouse[$ _key].press = true;
 	gmtl_internal.mouse[$ _key].release = false;
 	call_later(1, time_source_units_frames, gmtl_internal.mouse[$ _key].resetPress);
@@ -104,8 +111,7 @@ function simulateMouseClickPress(_btn, _x = mouse_x, _y = mouse_y) {
 /// @param	{real}	y
 function simulateMouseClickRelease(_btn, _x = mouse_x, _y = mouse_y) {
 	var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
-	gmtl_internal.mouse.x = _x;
-	gmtl_internal.mouse.y = _y;
+	simulateMousePosition(_x, _y);
 	gmtl_internal.mouse[$ _key].press = false;
 	gmtl_internal.mouse[$ _key].hold = false;
 	gmtl_internal.mouse[$ _key].release = true;
@@ -118,8 +124,7 @@ function simulateMouseClickRelease(_btn, _x = mouse_x, _y = mouse_y) {
 /// @param	{real}	y
 function simulateMouseClickHold(_btn, _x = mouse_x, _y = mouse_y) {
 	var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
-	gmtl_internal.mouse.x = _x;
-	gmtl_internal.mouse.y = _y;
+	simulateMousePosition(_x, _y);
 	gmtl_internal.mouse[$ _key].release = false;
 	gmtl_internal.mouse[$ _key].hold = true;
 	simulateMouseClickPress(_btn);

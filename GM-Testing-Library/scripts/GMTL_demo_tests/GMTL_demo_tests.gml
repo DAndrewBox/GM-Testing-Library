@@ -1,6 +1,6 @@
-/*
+
 suite(function() {
-	// Every suite() should have at least 1 describe().
+	// Every suite() should have at least 1 describe() or section().
 	describe("GameMaker's Testing Library - Demo - Suite 1 - Describe 1", function() {
 		if (true) { // Set to false to disable messages
 			#region Before/After - Each/All
@@ -8,7 +8,7 @@ suite(function() {
 				This events are optional but could help to work with multiple workflows.
 				The execution order for this functions per suite is:
 				> Suite starts
-				> Start describe
+				> Start describe/section
 					> Run beforeAll()
 					> Start loop of it/test
 						> Run beforeEach()
@@ -16,10 +16,10 @@ suite(function() {
 						> Run afterEach()
 					> Finish loop of it/test
 					> Run afterAll()
-				> Finish describe
+				> Finish describe/section
 				> Suite ends
 			*/
-/*
+
 			beforeAll(function() {
 				// This runs before all tests starts
 				show_debug_message("Before all!");
@@ -198,7 +198,7 @@ suite(function() {
 });
 	
 suite(function() {
-	describe("GameMaker's Testing Library - Demo - Suite 2 - Describe 1", function() {
+	section("GameMaker's Testing Library - Demo - Suite 2 - Describe 1", function() {
 		// This test should be skipped because of using "skip()" function
 		skip("Should be skipped no matter what", function () {
 			obj_unexistent = -1;

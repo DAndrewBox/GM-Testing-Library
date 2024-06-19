@@ -14,6 +14,8 @@ enum __gmtl_test_status {
 #macro	gmtl_suite_continue		gmtl_internal.suites.should_continue
 #macro	gmtl_suite_list			gmtl_internal.suites.list
 #macro	gmtl_suite_last_failed	gmtl_internal.suites.last_failed
+#macro	gmtl_coverage_files		gmtl_internal.coverage.files
+#macro	gmtl_coverage_table		gmtl_internal.coverage.table
 #macro	gmtl_coverage_suites	gmtl_internal.coverage.suites
 #macro	gmtl_coverage_tests		gmtl_internal.coverage.tests
 

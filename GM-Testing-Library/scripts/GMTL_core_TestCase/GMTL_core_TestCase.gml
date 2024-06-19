@@ -65,14 +65,14 @@ function TestCase(_val, _args) constructor {
 		
 		if (_isValid) {
 			var _received = undefined;
-			var _fn_to_run = __gmtl_internal_fn_get_function_index(__internal_value);
+			var _fn_to_run = __gmtl_internal_fn_get_fn_index(__internal_value);
 			if (is_callable(_fn_to_run)) {
 				try {
 					_received = script_execute_ext(_fn_to_run, __internal_args);
 				} catch(e) {
 					var _prev_indent = gmtl_indent;
 					gmtl_indent = 2;
-					__gmtl_internal_fn_log(e);
+					__gmtl_internal_fn_log(e.message);
 					gmtl_indent = _prev_indent;
 				}
 			}
@@ -101,14 +101,14 @@ function TestCase(_val, _args) constructor {
 			__gmtl_internal_fn_stacktrace();
 			
 			var _received = undefined;
-			var _fn_to_run = __gmtl_internal_fn_get_function_index(__internal_value);
+			var _fn_to_run = __gmtl_internal_fn_get_fn_index(__internal_value);
 			if (is_callable(_fn_to_run)) {
 				try {
 					_received = script_execute_ext(_fn_to_run, __internal_args);
 				} catch(e) {
 					var _prev_indent = gmtl_indent;
 					gmtl_indent = 2;
-					__gmtl_internal_fn_log(e);
+					__gmtl_internal_fn_log(e.message);
 					gmtl_indent = _prev_indent;
 				}
 			}
@@ -352,7 +352,19 @@ function TestCase(_val, _args) constructor {
 	
 	/// @func toBeFalsy()
 	function toBeFalsy() {
-		var _isValid = !(__internal_value);
+		var _isValid = false;
+		var _type_of = typeof(__internal_value);
+		
+		switch (_type_of) {
+			case "bool":
+				_isValid = (__internal_value != true);
+				break;
+			case "string":
+				_isValid = (__internal_value == "");
+				break;
+			default:
+				_isValid = is_undefined(__internal_value) || __internal_value <= 0;
+		}
 		
 		if (!_isValid) {
 			__gmtl_internal_fn_stacktrace();
@@ -369,7 +381,19 @@ function TestCase(_val, _args) constructor {
 	
 	/// @func toBeTruthy()
 	function toBeTruthy() {
-		var _isValid = !!(__internal_value);
+		var _isValid = false;
+		var _type_of = typeof(__internal_value);
+		
+		switch (_type_of) {
+			case "bool":
+				_isValid = (__internal_value == true);
+				break;
+			case "string":
+				_isValid = (__internal_value != "");
+				break;
+			default:
+				_isValid = !is_undefined(__internal_value) || __internal_value > 0;
+		}
 		
 		if (!_isValid) {
 			__gmtl_internal_fn_stacktrace();
