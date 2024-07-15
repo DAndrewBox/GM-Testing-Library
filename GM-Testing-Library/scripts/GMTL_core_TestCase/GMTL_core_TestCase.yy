@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "GMTL_core_TestCase",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Core",
-    "path": "folders/Libraries/GMTL/Core.yy",
+  "$GMScript":"v1",
+  "%Name":"GMTL_core_TestCase",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GMTL_core_TestCase",
+  "parent":{
+    "name":"Core",
+    "path":"folders/Libraries/GMTL/Core.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

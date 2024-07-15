@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "GMTL_demo_tests",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Demo",
-    "path": "folders/Libraries/GMTL/Demo.yy",
+  "$GMScript":"v1",
+  "%Name":"GMTL_demo_tests",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GMTL_demo_tests",
+  "parent":{
+    "name":"Demo",
+    "path":"folders/Libraries/GMTL/Demo.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

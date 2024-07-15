@@ -1,5 +1,5 @@
 {
-  "FolderOrderSettings": [
+  "FolderOrderSettings":[
     {"name":"Animation Curves","order":12,"path":"folders/Animation Curves.yy",},
     {"name":"Extensions","order":14,"path":"folders/Extensions.yy",},
     {"name":"Fonts","order":7,"path":"folders/Fonts.yy",},
@@ -20,16 +20,16 @@
     {"name":"Tile Sets","order":2,"path":"folders/Tile Sets.yy",},
     {"name":"Timelines","order":8,"path":"folders/Timelines.yy",},
   ],
-  "ResourceOrderSettings": [
-    {"name":"GMTL_core_TestCase","order":2,"path":"scripts/GMTL_core_TestCase/GMTL_core_TestCase.yy",},
-    {"name":"s_gmtl_demo_clickable","order":2,"path":"sprites/s_gmtl_demo_clickable/s_gmtl_demo_clickable.yy",},
-    {"name":"o_gmtl_demo_timer","order":1,"path":"objects/o_gmtl_demo_timer/o_gmtl_demo_timer.yy",},
-    {"name":"GMTL_init","order":2,"path":"scripts/GMTL_init/GMTL_init.yy",},
-    {"name":"GMTL_core_test_setup","order":1,"path":"scripts/GMTL_core_test_setup/GMTL_core_test_setup.yy",},
+  "ResourceOrderSettings":[
     {"name":"fnt_gmtl_demo","order":4,"path":"fonts/fnt_gmtl_demo/fnt_gmtl_demo.yy",},
-    {"name":"GMTL_internal","order":3,"path":"scripts/GMTL_internal/GMTL_internal.yy",},
     {"name":"o_gmtl_demo_draw","order":3,"path":"objects/o_gmtl_demo_draw/o_gmtl_demo_draw.yy",},
-    {"name":"GMTL_dependencies","order":1,"path":"scripts/GMTL_dependencies/GMTL_dependencies.yy",},
+    {"name":"o_gmtl_demo_timer","order":1,"path":"objects/o_gmtl_demo_timer/o_gmtl_demo_timer.yy",},
     {"name":"r_gmtl_demo","order":5,"path":"rooms/r_gmtl_demo/r_gmtl_demo.yy",},
+    {"name":"GMTL_core_test_setup","order":1,"path":"scripts/GMTL_core_test_setup/GMTL_core_test_setup.yy",},
+    {"name":"GMTL_core_TestCase","order":2,"path":"scripts/GMTL_core_TestCase/GMTL_core_TestCase.yy",},
+    {"name":"GMTL_dependencies","order":1,"path":"scripts/GMTL_dependencies/GMTL_dependencies.yy",},
+    {"name":"GMTL_init","order":2,"path":"scripts/GMTL_init/GMTL_init.yy",},
+    {"name":"GMTL_internal","order":3,"path":"scripts/GMTL_internal/GMTL_internal.yy",},
+    {"name":"s_gmtl_demo_clickable","order":2,"path":"sprites/s_gmtl_demo_clickable/s_gmtl_demo_clickable.yy",},
   ],
 }
