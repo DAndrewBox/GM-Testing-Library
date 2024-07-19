@@ -36,6 +36,20 @@ This is the official and up-to-date documentation for the **GameMaker's Testing 
   - [toBeGreaterThanOrEqual](#tobegreaterthanorequal)
   - [toBeLessThanOrEqual](#tobelessthanorequal)
 - [never](#never)
+- [Simulations](#simulations)
+  - [create](#create)
+  - [simulateKeyPress](#simulatekeypress)
+  - [simulateKeyRelease](#simulatekeyrelease)
+  - [simulateKeyHold](#simulatekeyhold)
+  - [simulateGamepadButtonPress](#simulategamepadbuttonpress)
+  - [simulateGamepadButtonRelease](#simulategamepadbuttonrelease)
+  - [simulateGamepadButtonHold](#simulategamepadbuttonhold)
+  - [simulateMouseClickPress](#simulatemouseclickpress)
+  - [simulateMouseClickRelease](#simulatemouseclickrelease)
+  - [simulateMouseClickHold](#simulatemouseclickhold)
+  - [simulateMousePosition](#simulatemouseposition)
+  - [simulateFrameWait](#simulateframewait)
+  - [simulateEvent](#simulateevent)
 
 ---
 
@@ -354,3 +368,104 @@ suite("My Suite", function() {
   });
 });
 ```
+
+---
+
+## Simulations
+
+Here you will find all the functions you can use to simulate events in your tests. These functions are used to simulate key presses, mouse clicks, gamepad button presses, and other events. You can use these functions to test how your code reacts to different events.
+
+### create
+
+`create(x, y, object, [params])`
+
+The `create` function is used to create an instance of an object at a specific position. This function will create an instance of the object at the specified position. You can also pass additional parameters to the object's `Create` event. The instance id of the created object will be returned and should be deleted after the test using `instance_destroy()`.
+
+Example:
+
+```gml
+suite("My Suite", function() {
+  section("My Section", function() {
+    test("My Test", function() {
+      var _obj = create(0, 0, obj_player);
+      expect(_obj).toBeGreaterThan(-1);
+      instance_destroy(_obj);
+    });
+  });
+});
+```
+
+### simulateKeyPress
+
+`simulateKeyPress(key)`
+
+The `simulateKeyPress` function is used to simulate a key press event. This function will simulate a key press event for the specified key. You can pass a virtual key code to the function to simulate a key press event. The key code should be a virtual key code like `vk_space`, `vk_left`, `vk_right`, etc.
+
+### simulateKeyRelease
+
+`simulateKeyRelease(key)`
+
+The `simulateKeyRelease` function is used to simulate a key release event. This function will simulate a key release event for the specified key. You can pass a virtual key code to the function to simulate a key release event. The key code should be a virtual key code like `vk_space`, `vk_left`, `vk_right`, etc.
+
+### simulateKeyHold
+
+`simulateKeyHold(key)`
+
+The `simulateKeyHold` function is used to simulate a key hold event. This function will simulate a key hold event for the specified key. You can pass a virtual key code to the function to simulate a key hold event. The key code should be a virtual key code like `vk_space`, `vk_left`, `vk_right`, etc. The key will be held until a `simulateKeyRelease` function is called.
+
+### simulateGamepadButtonPress
+
+`simulateGamepadButtonPress(device, button)`
+
+The `simulateGamepadButtonPress` function is used to simulate a gamepad button press event. This function will simulate a gamepad button press event for the specified device and button. You can pass a device id and a button id to the function to simulate a gamepad button press event. The device id should be a device id like `0`, `1`, etc. The button id should be a button id like `gp_face1`, `gp_*`, etc.
+
+### simulateGamepadButtonRelease
+
+`simulateGamepadButtonRelease(device, button)`
+
+The `simulateGamepadButtonRelease` function is used to simulate a gamepad button release event. This function will simulate a gamepad button release event for the specified device and button. You can pass a device id and a button id to the function to simulate a gamepad button release event. The device id should be a device id like `0`, `1`, etc. The button id should be a button id like `gp_face1`, `gp_*`, etc.
+
+### simulateGamepadButtonHold
+
+`simulateGamepadButtonHold(device, button)`
+
+The `simulateGamepadButtonHold` function is used to simulate a gamepad button hold event. This function will simulate a gamepad button hold event for the specified device and button. You can pass a device id and a button id to the function to simulate a gamepad button hold event. The device id should be a device id like `0`, `1`, etc. The button id should be a button id like `gp_face1`, `gp_*`, etc. The button will be held until a `simulateGamepadButtonRelease` function is called.
+
+### simulateMouseClickPress
+
+`simulateMouseClickPress(button, [x], [y])`
+
+The `simulateMouseClickPress` function is used to simulate a mouse click press event. This function will simulate a mouse click press event for the specified button. You can pass a button id to the function to simulate a mouse click press event. The button id should be a button id like `mb_left`, `mb_right`, etc. You can also pass an optional x and y position to simulate a mouse click at a specific position.
+
+### simulateMouseClickRelease
+
+`simulateMouseClickRelease(button, [x], [y])`
+
+The `simulateMouseClickRelease` function is used to simulate a mouse click release event. This function will simulate a mouse click release event for the specified button. You can pass a button id to the function to simulate a mouse click release event. The button id should be a button id like `mb_left`, `mb_right`, etc. You can also pass an optional x and y position to simulate a mouse click at a specific position.
+
+### simulateMouseClickHold
+
+`simulateMouseClickHold(button, [x], [y])`
+
+The `simulateMouseClickHold` function is used to simulate a mouse click hold event. This function will simulate a mouse click hold event for the specified button. You can pass a button id to the function to simulate a mouse click hold event. The button id should be a button id like `mb_left`, `mb_right`, etc. You can also pass an optional x and y position to simulate a mouse click at a specific position. The button will be held until a `simulateMouseClickRelease` function is called.
+
+### simulateMousePosition
+
+`simulateMousePosition(x, y)`
+
+The `simulateMousePosition` function is used to simulate a mouse position event. This function will simulate a mouse position event for the specified position. You can pass an x and y position to the function to simulate a mouse position event. The mouse position will be set to the specified position.
+
+### simulateFrameWait
+
+`simulateFrameWait([frames])`
+
+> [!IMPORTANT]
+> This function simulates frames passing by executing the step events of the objects, the frames are not actually rendered by GameMaker.
+
+The `simulateFrameWait` function is used to simulate a frame wait event. This function will wait for the specified number of virtual frames before continuing. You can pass an optional number of frames to the function to wait for a specific number of frames. If no frames are specified, it will wait for one frame.
+
+### simulateEvent
+
+`simulateEvent(event_type, event_number, [instance_id])`
+
+The `simulateEvent` function is used to simulate an event for an object. This function will simulate an event for the specified object. You can pass an object id, an event id, and an optional instance id to the function to simulate an event for the specified object. The event type and number should be theones described in the manual like `ev_create`, `ev_step`, etc. The instance id should be an instance id, if no instance id is specified, it will simulate the event for all instances currently active.
