@@ -1,6 +1,6 @@
 # 📚 Documentation
 
-### This is the official and up-to-date documentation for the **GameMaker's Testing Library**. Here you will find all the information you need to start using the library in your projects.
+This is the official and up-to-date documentation for the **GameMaker's Testing Library**. Here you will find all the information you need to start using the library in your projects.
 
 ---
 
@@ -55,7 +55,7 @@ suite("My Suite", function() {
 
 ### suite
 
-### `suite(name, callback)`
+`suite(name, callback)`
 
 > [!IMPORTANT]
 > You must always start your tests with a `suite` function. This is the root of your test suite and will contain all your tests. If you don't start with a `suite`, your tests will not run and probably throw an error.
@@ -64,7 +64,7 @@ Suites are used to group sections of tests together. They can be nested to creat
 
 ### describe
 
-### `describe(name, callback)` _or_ `section(name, callback)`
+`describe(name, callback)` _or_ `section(name, callback)`
 
 > [!IMPORTANT] > `describe` and `section` are the same function. You can use either of them to group your tests together. They are used to create a new section of tests inside a suite. You cannot nest sections inside other sections. sections should always be inside a suite and outside test.
 
@@ -72,7 +72,7 @@ Sections are used to group tests together. They can contain tests but not other 
 
 ### test
 
-### `test(name, callback)` _or_ `it(name, callback)`
+`test(name, callback)` _or_ `it(name, callback)`
 
 > [!IMPORTANT] > `test` and `it` are the same function. You can use either of them to create a new test. They are used to create a new test inside a section. You cannot nest tests inside other tests. Tests should always be inside a section.
 
@@ -82,7 +82,7 @@ Inside a test, you can use the `expect` function to make assertions about your c
 
 ### each
 
-### `each(name, callback, cases)`
+`each(name, callback, cases)`
 
 The `each` function is used to run a test multiple times with different arguments. This is useful when you want to test the same code with different inputs. You can pass an array of arguments to the `each` function and it will run the test for each argument.
 
@@ -110,7 +110,7 @@ suite("My Suite", function() {
 
 ### skip
 
-### `skip(name, callback, [cases])`
+`skip(name, callback, [cases])`
 
 The `skip` function is used to skip a test or a section of tests. This is useful when you want to temporarily disable a test without deleting it. You can pass a test or a section to the `skip` function and it will not run the test when the suite is executed.
 
@@ -132,7 +132,7 @@ suite("My Suite", function() {
 
 ### expect
 
-### `expect(actual)`
+`expect(actual)`
 
 The `expect` function is used to make assertions about your code. It will compare the actual value with the expected value and throw an error if they are not the same. You can use various matchers to make different types of assertions. You can look at the [Common Matchers](#common-matchers) section to see various of the available matchers.
 
@@ -213,25 +213,25 @@ So, the `beforeAll` function will run before all tests in the suite, the `before
 
 ### beforeEach
 
-### `beforeEach(callback)`
+`beforeEach(callback)`
 
 The `beforeEach` function is used to run a piece of code before each test in a section. This is useful when you want to set up some data before each test. You can put a `beforeEach` function in any section and it will run before each test in that section.
 
 ### afterEach
 
-### `afterEach(callback)`
+`afterEach(callback)`
 
 The `afterEach` function is used to run a piece of code after each test in a section. This is useful when you want to clean up some data after each test. You can put an `afterEach` function in any section and it will run after each test in that section.
 
 ### beforeAll
 
-### `beforeAll(callback)`
+`beforeAll(callback)`
 
 The `beforeAll` function is used to run a piece of code before all tests in a suite. This is useful when you want to set up some data before all tests. You can put a `beforeAll` function in any suite and it will run before all sections in that suite. You can also put a `beforeAll` function in a section and it will run before all tests in that section.
 
 ### afterAll
 
-### `afterAll(callback)`
+`afterAll(callback)`
 
 The `afterAll` function is used to run a piece of code after all tests in a suite. This is useful when you want to clean up some data after all tests. You can put an `afterAll` function in any suite and it will run after all sections in that suite. You can also put an `afterAll` function in a section and it will run after all tests in that section.
 
@@ -243,43 +243,43 @@ Here you will find all the matchers you can use after the `expect` function to m
 
 ### toBe
 
-### `toBe(expected)`
+`toBe(expected)`
 
 The `toBe` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays, but not structs. For structs, you can use the `toEqual` matcher.
 
 ### toEqual
 
-### `toEqual(expected)`
+`toEqual(expected)`
 
 The `toEqual` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays and structs.
 
 ### toContain
 
-### `toContain(expected)`
+`toContain(expected)`
 
 The `toContain` matcher is used to check if the actual value contains the expected value. This matcher will check if the actual value is an array and contains the expected value. It will throw an error if the actual value is not an array or struct, or if it does not contain the expected value.
 
 ### toHaveLength
 
-### `toHaveLength(expected)`
+`toHaveLength(expected)`
 
 The `toHaveLength` matcher is used to check if the actual value has the expected length. This matcher will check if the actual value is an array, string or struct and has the expected length. It will throw an error if the actual value is not an array, string or struct, or if it does not have the expected length.
 
 ### toHaveProperty
 
-### `toHaveProperty(property, [value])`
+`toHaveProperty(property, [value])`
 
 The `toHaveProperty` matcher is used to check if the actual value has the expected property. This matcher will check if the actual value is a struct and has the expected property. It will throw an error if the actual value is not a struct, or if it does not have the expected property. You can also pass a value to check if the property has the expected value.
 
 ### toHaveReturned
 
-### `toHaveReturned()`
+`toHaveReturned()`
 
 The `toHaveReturned` matcher is used to check if the actual value has returned a value. This matcher will check if the actual value is a function and has returned a value. It will throw an error if the actual value is not a function, or if it has not returned a value. (not `undefined`)
 
 ### toHaveReturnedWith
 
-### `toHaveReturnedWith(expected)`
+`toHaveReturnedWith(expected)`
 
 The `toHaveReturnedWith` matcher is used to check if the actual value has returned the expected value. This matcher will check if the actual value is a function and has returned the expected value. It will throw an error if the actual value is not a function, or if it has not returned the expected value.
 
@@ -291,13 +291,13 @@ Here you will find all the matchers you can use to check the truthiness of a val
 
 ### toBeTruthy
 
-### `toBeTruthy()`
+`toBeTruthy()`
 
 The `toBeTruthy` matcher is used to check if the actual value is `true`. This matcher will check if the actual value is `true`. It will throw an error if the actual value is not `true`.
 
 ### toBeFalsy
 
-### `toBeFalsy()`
+`toBeFalsy()`
 
 The `toBeFalsy` matcher is used to check if the actual value is `false`. This matcher will check if the actual value is `false`. It will throw an error if the actual value is not `false`.
 
@@ -309,25 +309,25 @@ Here you will find all the matchers you can use to compare numbers. These matche
 
 ### toBeGreaterThan
 
-### `toBeGreaterThan(expected)`
+`toBeGreaterThan(expected)`
 
 The `toBeGreaterThan` matcher is used to check if the actual value is greater than the expected value. This matcher will check if the actual value is greater than the expected value. It will throw an error if the actual value is not greater than the expected value.
 
 ### toBeLessThan
 
-### `toBeLessThan(expected)`
+`toBeLessThan(expected)`
 
 The `toBeLessThan` matcher is used to check if the actual value is less than the expected value. This matcher will check if the actual value is less than the expected value. It will throw an error if the actual value is not less than the expected value.
 
 ### toBeGreaterThanOrEqual
 
-### `toBeGreaterThanOrEqual(expected)`
+`toBeGreaterThanOrEqual(expected)`
 
 The `toBeGreaterThanOrEqual` matcher is used to check if the actual value is greater than or equal to the expected value. This matcher will check if the actual value is greater than or equal to the expected value. It will throw an error if the actual value is not greater than or equal to the expected value.
 
 ### toBeLessThanOrEqual
 
-### `toBeLessThanOrEqual(expected)`
+`toBeLessThanOrEqual(expected)`
 
 The `toBeLessThanOrEqual` matcher is used to check if the actual value is less than or equal to the expected value. This matcher will check if the actual value is less than or equal to the expected value. It will throw an error if the actual value is not less than or equal to the expected value.
 
@@ -335,7 +335,7 @@ The `toBeLessThanOrEqual` matcher is used to check if the actual value is less t
 
 ## never
 
-### `.never()`
+`.never()`
 
 > ![IMPORTANT]
 > The `never` matcher is used to negate an assertion. This matcher is used to check if something never happens. You can use it after the `expect` function to negate the assertion. It basically works like a `not` operator in other testing libraries, but `not` cannot be used in GameMaker because is a reserved word.
