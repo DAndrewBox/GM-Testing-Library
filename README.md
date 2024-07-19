@@ -6,7 +6,7 @@
 
 [![license](https://img.shields.io/github/license/DAndrewBox/GM-Testing-Library)](LICENSE)
 [![release](https://img.shields.io/github/v/release/DAndrewBox/GM-Testing-Library)](https://github.com/DAndrewBox/GM-Testing-Library)
-[![downloads](https://img.shields.io/github/downloads/DAndrewBox/GML-Extended/total)](https://github.com/DAndrewBox/GM-Testing-Library/releases)
+[![downloads](https://img.shields.io/github/downloads/DAndrewBox/GM-Testing-Library/total)](https://github.com/DAndrewBox/GM-Testing-Library/releases)
 
 ### 🗂️ **Compatible with GameMaker versions:**
 
