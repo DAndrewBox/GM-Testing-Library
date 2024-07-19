@@ -35,7 +35,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2023.4.0.84",
+    "IDEVersion":"2024.6.2.162",
   },
   "name":"GM-Testing-Library",
   "resources":[
@@ -51,6 +51,7 @@
     {"id":{"name":"GMTL_dependencies","path":"scripts/GMTL_dependencies/GMTL_dependencies.yy",},},
     {"id":{"name":"GMTL_init","path":"scripts/GMTL_init/GMTL_init.yy",},},
     {"id":{"name":"GMTL_internal","path":"scripts/GMTL_internal/GMTL_internal.yy",},},
+    {"id":{"name":"GMTL_remove_unused_msg","path":"scripts/GMTL_remove_unused_msg/GMTL_remove_unused_msg.yy",},},
     {"id":{"name":"s_gmtl_demo_clickable","path":"sprites/s_gmtl_demo_clickable/s_gmtl_demo_clickable.yy",},},
   ],
   "resourceType":"GMProject",

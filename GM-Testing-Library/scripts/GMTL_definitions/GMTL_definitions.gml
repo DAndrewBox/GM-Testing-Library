@@ -40,5 +40,13 @@ enum __gmtl_test_status {
 #macro	mouse_check_button_pressed				__gmtl_internal_fn_mouse_check_button_pressed
 #macro	mouse_check_button_released				__gmtl_internal_fn_mouse_check_button_released
 
+#macro	original_gamepad_button_check			gamepad_button_check
+#macro	original_gamepad_button_check_pressed	gamepad_button_check_pressed
+#macro	original_gamepad_button_check_released	gamepad_button_check_released
+
+#macro	gamepad_button_check					__gmtl_internal_fn_gamepad_button_check
+#macro	gamepad_button_check_pressed			__gmtl_internal_fn_gamepad_button_check_pressed
+#macro	gamepad_button_check_released			__gmtl_internal_gamepad_button_check_released
+
 #macro	mouse_x		__gmtl_internal_fn_mouse_get_x()
 #macro	mouse_y		__gmtl_internal_fn_mouse_get_y()

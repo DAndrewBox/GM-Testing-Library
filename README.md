@@ -4,16 +4,16 @@
 
 ## An open-source testing framework for GameMaker libraries, extensions and (_hopefully_) prefabs, with a focus on simplicity and ease of use.
 
-[![license](https://img.shields.io/github/license/DAndrewBox/GML-Extended)](LICENSE)
-[![release](https://img.shields.io/github/v/release/DAndrewBox/GML-Extended)](https://github.com/DAndrewBox/GML-Extended)
-[![downloads](https://img.shields.io/github/downloads/DAndrewBox/GML-Extended/total)](https://github.com/DAndrewBox/GML-Extended/releases)
+[![license](https://img.shields.io/github/license/DAndrewBox/GM-Testing-Library)](LICENSE)
+[![release](https://img.shields.io/github/v/release/DAndrewBox/GM-Testing-Library)](https://github.com/DAndrewBox/GM-Testing-Library)
+[![downloads](https://img.shields.io/github/downloads/DAndrewBox/GML-Extended/total)](https://github.com/DAndrewBox/GM-Testing-Library/releases)
 
 ### 🗂️ **Compatible with GameMaker versions:**
 
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2023.4+-039e5c?logo=gamemaker&labelColor=000)
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2024-039e5c?logo=gamemaker&labelColor=000)
 
-### 📅 Last updated: 2024-06-18
+### 📅 Last updated: 2024-07-19
 
 ---
 
@@ -23,15 +23,15 @@ Originally created by [**@DAndrewBox**](https://twitter.com/DAndrewBox_).
 
 [![github](https://img.shields.io/badge/DAndrewBox-000?logo=github&label=Github&logoColor=white)](https://github.com/DAndrewBox)
 
-
 ### 🙏 Special Thanks & Inspirations
 
-- [**YoYo Games**](https://www.yoyogames.com/) for creating GameMaker.
+- [**YoYo Games**](https://www.gamemaker.io/) for creating GameMaker.
 - [**React Testing Library**](https://testing-library.com/) & [**Jest**](https://jestjs.io/) for being the main inspiration.
 
 ---
 
 ### 📋 Table of Contents
+
 - [🔧 Versioning & Compatibility](https://github.com/DAndrewBox/GM-Testing-Library/wiki)
 - [🌱 Installation](https://github.com/DAndrewBox/GM-Testing-Library/wiki/Getting-Started)
 - [📚 Documentation](https://github.com/DAndrewBox/GM-Testing-Library/wiki/Documentation)

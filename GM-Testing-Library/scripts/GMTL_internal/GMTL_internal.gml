@@ -103,6 +103,27 @@ function __gmtl_internal_fn_keyboard_check_released(_btn) {
 	return original_keyboard_check_released(_btn) || gmtl_internal.keys.release == _btn;
 }
 
+/// @func	__gmtl_internal_fn_gamepad_button_check(device, button)
+/// @param	{real}	device
+/// @param	{real}	button
+function __gmtl_internal_fn_gamepad_button_check(_device, _btn) {
+	return original_gamepad_button_check(_device, _btn) || gmtl_internal.gamepad[_device].hold == _btn || gmtl_internal.gamepad[_device].press == _btn;
+}
+
+/// @func	__gmtl_internal_fn_gamepad_button_check_pressed(device, button)
+/// @param	{real}	device
+/// @param	{real}	button
+function __gmtl_internal_fn_gamepad_button_check_pressed(_device, _btn) {
+	return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device].press == _btn;
+}
+
+/// @func	__gmtl_internal_gamepad_button_check_released(device, button)
+/// @param	{real}	device
+/// @param	{real}	button
+function __gmtl_internal_gamepad_button_check_released(_device, _btn) {
+	return original_gamepad_button_check_released(_device, _btn) || gmtl_internal.gamepad[_device].release == _btn;
+}
+
 /// @func	__gmtl_internal_fn_mouse_button_to_map(button)
 /// @param	{real}		button
 function __gmtl_internal_fn_mouse_button_to_map(_btn) {

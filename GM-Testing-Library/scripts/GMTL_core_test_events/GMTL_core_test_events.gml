@@ -85,6 +85,46 @@ function simulateKeyHold(_btn) {
 	});
 }
 
+/// @func	simulateGamepadButtonPress(device, button)
+/// @param	{real}	device
+/// @param	{real}	button
+function simulateGamepadButtonPress(_device, _btn) {
+	static _reset = function (_device) {
+		gmtl_internal.gamepad[_device].press = vk_nokey;
+	}
+	
+	gmtl_internal.gamepad[_device].press = _btn;
+	static _ts = time_source_create(time_source_game, 1, time_source_units_frames, _reset, [_device]);
+	time_source_start(_ts);
+}
+
+/// @func	simulateGamepadButtonRelease(device, button)
+/// @param	{real}	device
+/// @param	{real}	button
+function simulateGamepadButtonRelease(_device, _btn) {
+	static _reset = function (_device) {
+		gmtl_internal.gamepad[_device].release = vk_nokey;
+	}
+	
+	gmtl_internal.gamepad[_device].release = _btn;
+	static _ts = time_source_create(time_source_game, 1, time_source_units_frames, _reset, [_device]);
+	time_source_start(_ts);
+}
+
+/// @func	simulateGamepadButtonHold(device, button)
+/// @param	{real}	device
+/// @param	{real}	button
+function simulateGamepadButtonHold(_device, _btn) {
+	static _reset = function (_device) {
+		gmtl_internal.gamepad[_device].hold = vk_nokey;
+	};
+	gmtl_internal.gamepad[_device].hold = _btn;
+	
+	simulateKeyPress(_btn);
+	static _ts = time_source_create(time_source_game, 1, time_source_units_frames, _reset, [_device]);
+	time_source_start(_ts);
+}
+
 /// @func	simulateMousePosition(x, y)
 /// @param	{real}	x
 /// @param	{real}	y

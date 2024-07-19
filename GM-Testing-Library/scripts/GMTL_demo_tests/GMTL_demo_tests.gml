@@ -22,22 +22,18 @@ suite(function() {
 
 			beforeAll(function() {
 				// This runs before all tests starts
-				show_debug_message("Before all!");
 			});
 	
 			afterAll(function() {
 				// This runs after all tests are completed
-				show_debug_message("After all!");
 			});
 	
 			beforeEach(function() {
 				// This runs before EACH test starts
-				show_debug_message("Before each!");
 			});
 		
 			afterEach(function() {
 				// This runs after EACH test ends
-				show_debug_message("After each!");
 			});
 			#endregion	
 		}
@@ -73,6 +69,8 @@ suite(function() {
 			expect(_d).toBeGreaterThanOrEqual(5);
 			expect(_a).toBeLessThan(_d);
 			expect(_a).toBeLessThanOrEqual(4);
+			
+			expect(_a).never().toBe(5);
 			
 			var _addNumbers = function (_a, _b) {
 				if (!_a || !_b || !(is_real(_a) && is_real(_b))) return;
@@ -151,6 +149,24 @@ suite(function() {
 			simulateKeyRelease(ord("A"));
 			simulateFrameWait();	// Perform all events on all instances for 1 frame after release
 			expect(_inst.timer_key_hold).toBe(0);
+			
+			instance_destroy(_inst);
+		});
+		
+		// This will create an instance and check gamepad button hold time
+		it("Should create an instance and check gamepad button events", function () {
+			var _inst = create(0, 0, o_gmtl_demo_timer);
+			
+			expect(_inst).toHaveProperty("timer_gamepad_button_hold", 0);
+			
+			// Simulate a hold and release
+			simulateGamepadButtonHold(0, gp_face1);
+			simulateFrameWait(10);
+			expect(_inst.timer_gamepad_button_hold).toBe(10);
+
+			simulateGamepadButtonRelease(0, gp_face1);
+			simulateFrameWait();
+			expect(_inst.timer_gamepad_button_hold).toBe(0);
 			
 			instance_destroy(_inst);
 		});

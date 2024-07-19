@@ -36,4 +36,5 @@ The minimum version of GameMaker required to use this library is **GameMaker Stu
 |          2023 LTS |     ✅      |
 |            2024.x |    ✅\*     |
 
-> [!NOTE] > **Author's comment:** Depending if anyone is interested in using this library with older versions of GameMaker, I could make a version compatible up to **GameMaker Studio 2.3.7** as I did with the compatibility update in the [**GML-Extended**](https://github.com/DAndrewBox/GML-Extended/) library.
+> [!NOTE]
+> **Author's comment:** Depending if anyone is interested in using this library with older versions of GameMaker, I could make a version compatible up to **GameMaker Studio 2.3.7** as I did with the compatibility update in the [**GML-Extended**](https://github.com/DAndrewBox/GML-Extended/) library.

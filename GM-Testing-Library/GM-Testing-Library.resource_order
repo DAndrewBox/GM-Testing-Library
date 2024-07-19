@@ -30,6 +30,7 @@
     {"name":"GMTL_dependencies","order":1,"path":"scripts/GMTL_dependencies/GMTL_dependencies.yy",},
     {"name":"GMTL_init","order":2,"path":"scripts/GMTL_init/GMTL_init.yy",},
     {"name":"GMTL_internal","order":3,"path":"scripts/GMTL_internal/GMTL_internal.yy",},
+    {"name":"GMTL_remove_unused_msg","order":4,"path":"scripts/GMTL_remove_unused_msg/GMTL_remove_unused_msg.yy",},
     {"name":"s_gmtl_demo_clickable","order":2,"path":"sprites/s_gmtl_demo_clickable/s_gmtl_demo_clickable.yy",},
   ],
 }
