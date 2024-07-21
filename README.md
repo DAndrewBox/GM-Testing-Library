@@ -13,7 +13,7 @@
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2023.4+-039e5c?logo=gamemaker&labelColor=000)
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2024-039e5c?logo=gamemaker&labelColor=000)
 
-### 📅 Last updated: 2024-07-19
+### 📅 Last updated: 2024-07-20
 
 ---
 
@@ -35,6 +35,7 @@ Originally created by [**@DAndrewBox**](https://twitter.com/DAndrewBox_).
 - [🔧 Versioning & Compatibility](https://github.com/DAndrewBox/GM-Testing-Library/wiki)
 - [🌱 Installation](https://github.com/DAndrewBox/GM-Testing-Library/wiki/Getting-Started)
 - [📚 Documentation](https://github.com/DAndrewBox/GM-Testing-Library/wiki/Documentation)
+- [🧾 Usage Example](#-usage-example)
 - [📜 License](#-license)
 - [🤝 Contributing](#-contributing)
 
