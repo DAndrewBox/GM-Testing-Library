@@ -58,7 +58,7 @@ This is the official and up-to-date documentation for the **GameMaker's Testing 
 Here you will find all the functions you need to start writing tests with the **GameMaker's Testing Library**. These are some of functions to create your tests: `suite`, `section`, and `test`. Here's an example of how to use them:
 
 ```gml
-suite("My Suite", function() {
+suite(function() {
   section("My Section", function() {
     test("My Test", function() {
       // Test code here
@@ -69,7 +69,7 @@ suite("My Suite", function() {
 
 ### suite
 
-`suite(name, callback)`
+`suite(callback)`
 
 > [!IMPORTANT]
 > You must always start your tests with a `suite` function. This is the root of your test suite and will contain all your tests. If you don't start with a `suite`, your tests will not run and probably throw an error.
@@ -88,7 +88,8 @@ Sections are used to group tests together. They can contain tests but not other 
 
 `test(name, callback)` _or_ `it(name, callback)`
 
-> [!IMPORTANT] > `test` and `it` are the same function. You can use either of them to create a new test. They are used to create a new test inside a section. You cannot nest tests inside other tests. Tests should always be inside a section.
+> [!IMPORTANT]
+> `test` and `it` are the same function. You can use either of them to create a new test. They are used to create a new test inside a section. You cannot nest tests inside other tests. Tests should always be inside a section.
 
 Tests are used to test a specific piece of code. They should be small and focused on a single aspect of your code. You can put a test in any section and it is recommended to have multiple tests per section to test different parts of your code.
 
@@ -107,7 +108,7 @@ It's basically works like a loop that runs the test for each argument in the arr
 Example:
 
 ```gml
-suite("My Suite", function() {
+suite(function() {
   section("My Section", function() {
     each("Should {0} + {1} be {2}.", function(_arg1, _arg2, _arg3) {
 			expect(_arg1 + _arg2).toBe(_arg3);
@@ -131,7 +132,7 @@ The `skip` function is used to skip a test or a section of tests. This is useful
 Example:
 
 ```gml
-suite("My Suite", function() {
+suite(function() {
   section("My Section", function() {
     test("My Test", function() {
       // Test code here
@@ -155,7 +156,7 @@ You can also use the method `.never()` to negate the assertion. This is useful w
 Example:
 
 ```gml
-suite("My Suite", function() {
+suite(function() {
   section("My Section", function() {
     test("My Test", function() {
       expect(1 + 1).toBe(2);
@@ -188,7 +189,7 @@ afterAll(function() {
   // Code to run after all tests
 });
 
-suite("My Suite", function() {
+suite(function() {
   section("My Section", function() {
     test("My Test", function() {
       // Test code here
@@ -359,7 +360,7 @@ Here you will find all the matchers you can use to negate an assertion. These ma
 Example:
 
 ```gml
-suite("My Suite", function() {
+suite(function() {
   section("My Section", function() {
     test("My Test", function() {
       expect(1 + 1).toBe(2);
@@ -384,7 +385,7 @@ The `create` function is used to create an instance of an object at a specific p
 Example:
 
 ```gml
-suite("My Suite", function() {
+suite("Mfunction() {
   section("My Section", function() {
     test("My Test", function() {
       var _obj = create(0, 0, obj_player);
