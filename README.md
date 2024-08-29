@@ -17,6 +17,15 @@
 
 ---
 
+#### 🏆 This project has been nominated for the [**GameMaker Awards 2024**](opr.as/GMA24-Vote), if you like this project or want to support me, please consider voting for it!
+
+<br />
+<p align="center">
+  <img src="./logo-nominated.png" height="200px" alt="GameMaker Testing Library"/>
+</p>
+
+---
+
 ### ✨ Author & Collaborators
 
 Originally created by [**@DAndrewBox**](https://twitter.com/DAndrewBox_).
@@ -55,7 +64,7 @@ suite(function() {
 
     test("Should move obj_Player to the right", function() {
       var _obj = create(0, 0, obj_player);
-      
+
       simulateKeyHold(vk_right);
       simulateFrameWait(1);
       simulateKeyRelease(vk_right);
@@ -67,7 +76,7 @@ suite(function() {
 
     test("Should move obj_Player to the left", function() {
       var _obj = create(0, 0, obj_player);
-      
+
       simulateKeyHold(vk_left);
       simulateFrameWait(1);
       simulateKeyRelease(vk_left);
