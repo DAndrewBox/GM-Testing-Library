@@ -17,7 +17,7 @@
 
 ---
 
-#### 🏆 This project has been nominated for the [**GameMaker Awards 2024**](opr.as/GMA24-Vote), if you like this project or want to support me, please consider voting for it!
+#### 🏆 This project has been nominated for the [**GameMaker Awards 2024**](https://opr.as/GMA24-Vote), if you like this project or want to support me, please consider voting for it!
 
 <br />
 <p align="center">
