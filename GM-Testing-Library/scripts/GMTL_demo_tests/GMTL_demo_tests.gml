@@ -101,19 +101,30 @@ suite(function() {
 	describe("GameMaker's Testing Library - Demo - Suite 1 - Describe 2", function() {
 		// This should create and test an instance
 		// test() is another way to call to call the it() function
-		test("Should create an instance, wait, and check alive timer.", function() {
+		test("Should create an instance, wait, check alive timer and destruction.", function() {
 			var _inst = create(10, 10, o_gmtl_demo_timer);
-			_inst.waitFor(5, time_source_units_frames);
-			
+
+		    // Check if the instance was created
+		    expect(instance_exists(_inst)).toBeTruthy();
+
+		    // Wait for 5 frames
+		    _inst.waitFor(5, time_source_units_frames);
 			expect(_inst).toHaveProperty("timer", 5);
-			
-			_inst.waitFor(2, time_source_units_seconds);
-			
-			// Assuming gamespeed to be 60 fps / sec, so 5 + (60 frames * 2 seconds)
+
+		    // Wait for 2 seconds (120 frames)
+		    _inst.waitFor(2, time_source_units_seconds);
+
+		    // Assuming gamespeed to be 60 fps / sec, so 5 + (60 frames * 2 seconds)
 			expect(_inst.timer).toBeEqual(125);
-			
-			// You should destroy the instance after test, if not, could cause memory leaks.
-			instance_destroy(_inst);
+
+		    // Check if the instance is still alive
+		    expect(instance_exists(_inst)).toBeTruthy();
+
+		    // Wait for 75 frames
+		    _inst.waitFor(75, time_source_units_frames);
+
+		    // Check if the instance was destroyed
+		    expect(instance_exists(_inst)).toBeFalsy();
 		});
 		
 		// This should create an instance and check key press time

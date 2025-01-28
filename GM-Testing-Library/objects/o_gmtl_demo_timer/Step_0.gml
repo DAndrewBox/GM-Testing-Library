@@ -1,6 +1,10 @@
 /// @description 
 timer++;
 
+if (timer >= 200) {
+	instance_destroy();
+}
+
 if (keyboard_check_pressed(ord("A")) || keyboard_check(ord("A"))) {
 	timer_key_hold += 1;
 }
