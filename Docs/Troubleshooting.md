@@ -22,6 +22,14 @@ This issue can be caused by the library's scripts not being found in the project
 
 ---
 
+### GMTL_Definitions script file empty after importing in blank project
+
+This issue should be solved since v1.1.0, but if you still encounter it, you can manually copy the contents of the `GMTL_Definitions` script file from the [library's repository](https://github.com/DAndrewBox/GM-Testing-Library/blob/main/GM-Testing-Library/scripts/GMTL_definitions/GMTL_definitions.gml) into your project. This file contains the definitions for the library's functions and is essential for the library to work correctly.
+
+I'm not really sure what causes this issue, but it seems to be related to the import process of the library that GameMaker does. If you encounter this issue, please [create an issue](https://github.com/DAndrewBox/GM-Testing-Library/issues) so I can investigate it further.
+
+---
+
 ### Library not found
 
 This error is caused by the library not being found in the project. To fix this, you need to add the library to the project. You can do this by following the installation instructions in the [**Getting Started**](./Getting-Started) section.
