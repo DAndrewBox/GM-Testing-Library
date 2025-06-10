@@ -1,5 +1,6 @@
 /// @func	__gmtl_internal_fn_log(message)
 /// @param	{string}	message
+/// @ignore
 function __gmtl_internal_fn_log(_msg) {
 	var _pad_left = "";
 	for (var i = 0; i < gmtl_indent * 2; i++) {
@@ -13,6 +14,7 @@ function __gmtl_internal_fn_log(_msg) {
 /// @func	__gmtl_internal_fn_log_test_success(message, time)
 /// @param	{string}	message
 /// @param	{real}	time
+/// @ignore
 function __gmtl_internal_fn_log_test_success(_msg, _time) {
 	__gmtl_internal_fn_log($"✔ {_msg} ({_time / 1000}ms)");
 }
@@ -20,18 +22,21 @@ function __gmtl_internal_fn_log_test_success(_msg, _time) {
 /// @func	__gmtl_internal_fn_log_test_failed(message, time)
 /// @param	{string}	message
 /// @param	{real}	time
+/// @ignore
 function __gmtl_internal_fn_log_test_failed(_msg, _time) {
 	__gmtl_internal_fn_log($"❌ {_msg} ({_time / 1000}ms)");
 }
 
 /// @func	__gmtl_internal_fn_log_test_skipped(message)
 /// @param	{string}	message
+/// @ignore
 function __gmtl_internal_fn_log_test_skipped(_msg) {
 	__gmtl_internal_fn_log($"⚠ (Skipped) {_msg}");
 }
 
 /// @func	__gmtl_internal_fn_suite_add_to_queue(suite)
-/// @param	{function}	suite
+/// @param	{GMFunction}	suite
+/// @ignore
 function __gmtl_internal_fn_suite_add_to_queue(_suite) {
 	var _ts = time_source_create(time_source_game, 2, time_source_units_frames, function(_suite) {
 		array_push(gmtl_suite_list, _suite);
@@ -45,11 +50,22 @@ function __gmtl_internal_fn_suite_add_to_queue(_suite) {
 /// @param	{ref}	instance
 /// @param	{real}	time
 /// @param	{real}	unit
+/// @ignore
 function __gmtl_internal_fn_wait_for(_inst, _t, _unit) {
 	_t = (_unit == time_source_units_seconds ? _t * game_get_speed(gamespeed_fps) : _t);
 	var _count = 0;
 	
 	while (_count < _t) {
+		// Simulate all timesources
+		if (_inst == all) {
+			var _ts_len = array_length(gmtl_timesources);
+			for (var i = 0; i < _ts_len; i++) {
+				if (gmtl_timesources[i] == -1) continue;
+				gmtl_timesources[i].frameCheck();
+			}
+		}
+		
+		// Simulate frame dependant events into instances
 		with (_inst) {
 			event_perform(ev_step, ev_step_begin);
 			event_perform(ev_step, ev_step_normal);
@@ -67,6 +83,7 @@ function __gmtl_internal_fn_wait_for(_inst, _t, _unit) {
 }
 
 /// @func	__gmtl_internal_fn_stacktrace()
+/// @ignore
 function __gmtl_internal_fn_stacktrace() {
 	static _stacktrace_fn = function (e) {
 		return (string_pos("gml_Script_anon@", e) > 0);
@@ -87,45 +104,52 @@ function __gmtl_internal_fn_stacktrace() {
 
 /// @func	__gmtl_internal_fn_keyboard_check(button)
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_keyboard_check(_btn) {
-	return original_keyboard_check(_btn) || gmtl_internal.keys.hold == _btn || gmtl_internal.keys.press == _btn;
+	return original_keyboard_check(_btn) || gmtl_internal.keys[$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_keyboard_check_pressed(button)
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_keyboard_check_pressed(_btn) {
-	return original_keyboard_check_pressed(_btn) || gmtl_internal.keys.press == _btn;
+	return original_keyboard_check_pressed(_btn) || gmtl_internal.keys[$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_keyboard_check_released(button)
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_keyboard_check_released(_btn) {
-	return original_keyboard_check_released(_btn) || gmtl_internal.keys.release == _btn;
+	return original_keyboard_check_released(_btn) || !gmtl_internal.keys[$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check(device, button)
 /// @param	{real}	device
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_gamepad_button_check(_device, _btn) {
-	return original_gamepad_button_check(_device, _btn) || gmtl_internal.gamepad[_device].hold == _btn || gmtl_internal.gamepad[_device].press == _btn;
+	return original_gamepad_button_check(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check_pressed(device, button)
 /// @param	{real}	device
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_gamepad_button_check_pressed(_device, _btn) {
-	return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device].press == _btn;
+	return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
 }
 
 /// @func	__gmtl_internal_gamepad_button_check_released(device, button)
 /// @param	{real}	device
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_gamepad_button_check_released(_device, _btn) {
-	return original_gamepad_button_check_released(_device, _btn) || gmtl_internal.gamepad[_device].release == _btn;
+	return original_gamepad_button_check_released(_device, _btn) || !gmtl_internal.gamepad[_device][$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_mouse_button_to_map(button)
 /// @param	{real}		button
+/// @ignore
 function __gmtl_internal_fn_mouse_button_to_map(_btn) {
 	switch (_btn) {
 		default:
@@ -140,6 +164,7 @@ function __gmtl_internal_fn_mouse_button_to_map(_btn) {
 /// @func	__gmtl_internal_fn_mouse_check_anykey(expected, state)
 /// @param	{bool}		expected
 /// @param	{string}	state
+/// @ignore
 function __gmtl_internal_fn_mouse_check_anykey(_expected, _state) {
 	static _keys = struct_get_names(gmtl_internal.mouse);
 	static _keys_len = array_length(_keys);
@@ -156,6 +181,7 @@ function __gmtl_internal_fn_mouse_check_anykey(_expected, _state) {
 
 /// @func	__gmtl_internal_fn_mouse_check_button(button)
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_mouse_check_button(_btn) {
 	if (original_mouse_check_button(_btn)) {
 		return true;
@@ -175,6 +201,7 @@ function __gmtl_internal_fn_mouse_check_button(_btn) {
 
 /// @func	__gmtl_internal_fn_mouse_check_button_pressed(button)
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {
 	if (original_mouse_check_button_pressed(_btn)) {
 		return true;
@@ -194,6 +221,7 @@ function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {
 
 /// @func	__gmtl_internal_fn_mouse_check_button_released(button)
 /// @param	{real}	button
+/// @ignore
 function __gmtl_internal_fn_mouse_check_button_released(_btn) {
 	if (original_mouse_check_button_released(_btn)) {
 		return true;
@@ -212,6 +240,7 @@ function __gmtl_internal_fn_mouse_check_button_released(_btn) {
 }
 
 /// @func	__gmtl_internal_fn_mouse_reset()
+/// @ignore
 function __gmtl_internal_fn_mouse_reset() {
 	static _keys = struct_get_names(gmtl_internal.mouse);
 	static _keys_len = array_length(_keys);
@@ -224,6 +253,7 @@ function __gmtl_internal_fn_mouse_reset() {
 }
 
 /// @func	__gmtl_internal_fn_mouse_get_x()
+/// @ignore
 function __gmtl_internal_fn_mouse_get_x() {
 	if (gmtl_internal.finished) {
 		var _w_camera = camera_get_view_width(view_camera[view_current]);
@@ -238,6 +268,7 @@ function __gmtl_internal_fn_mouse_get_x() {
 }
 
 /// @func	__gmtl_internal_fn_mouse_get_y()
+/// @ignore
 function __gmtl_internal_fn_mouse_get_y() {
 	if (gmtl_internal.finished) {
 		var _h_camera = camera_get_view_height(view_camera[view_current]);
@@ -252,7 +283,8 @@ function __gmtl_internal_fn_mouse_get_y() {
 }
 
 /// @func	__gmtl_internal_fn_get_fn_index(fn)
-/// @param	{function}	fn
+/// @param	{GMFunction}	fn
+/// @ignore
 function __gmtl_internal_fn_get_fn_index(_fn) {
 	var _fn_to_run = -1;
 	if (is_method(_fn)) {
@@ -265,7 +297,8 @@ function __gmtl_internal_fn_get_fn_index(_fn) {
 }
 
 /// @func	__gmtl_internal_fn_call_suite(suite)
-/// @param	{function}	suite
+/// @param	{GMFunction}	suite
+/// @ignore
 function __gmtl_internal_fn_call_suite(_suite) {
 	gmtl_suite_last_failed = false;
 	try {
@@ -295,6 +328,7 @@ function __gmtl_internal_fn_call_suite(_suite) {
 
 /// @func	__gmtl_internal_fn_finish_suites(time_start)
 /// @param	{real}	time_start
+/// @ignore
 function __gmtl_internal_fn_finish_suites(_t_start) {
 	var _failed, _skipped, _time, _success_rate;
 	gmtl_indent = 0;
@@ -318,12 +352,18 @@ function __gmtl_internal_fn_finish_suites(_t_start) {
 }
 
 /// @func	__gmtl_internal_fn_find_coverage_files()
+/// @ignore
 function __gmtl_internal_fn_find_coverage_files() {
-	var _dir_path = string_copy(GM_project_filename, 1, string_last_pos("\\", GM_project_filename));
+	// Parse the project directory path. (Fix for Ubuntu and Mac exports)
+	var _parsed_dir = string_replace_all(GM_project_filename, "/", "\\");
+	var _dir_path = string_copy(_parsed_dir, 1, string_last_pos("\\", _parsed_dir));
 	var _dir_exists = directory_exists(_dir_path);
+	
+	// Find all scripts in the project (saved as folders)
 	var _folders = [];
 	if (_dir_exists) {
 		var _file = file_find_first($"{_dir_path}scripts\\*", fa_directory);
+		
 		while (_file != "") {
 			if !(string_pos(".", _file) > 0) {
 				array_push(_folders, _file);
@@ -333,7 +373,11 @@ function __gmtl_internal_fn_find_coverage_files() {
 			
 		file_find_close();
 	}
+	
+	// If folder is not found, early return
+	if (array_length(_folders) == 0) return;
 		
+	// For every folder, find all *.gml files to find coverage for
 	var _coverage_files = [];
 	var _folders_len = array_length(_folders);
 	for (var i = 0; i < _folders_len; i++) {
@@ -346,27 +390,43 @@ function __gmtl_internal_fn_find_coverage_files() {
 		file_find_close();
 	}
 		
+	// Once all files has been found, get all the function names inside every file to index
 	var _files_len = array_length(_coverage_files);
 	for (var i = 0; i < _files_len; i++) {
 		var _fns = [];
 		var _file = file_text_open_read(_coverage_files[i]);
-		var _str = "";
+		
 		while (!file_text_eof(_file)) {
 			var _cur_line = file_text_readln(_file);
-			_str += _cur_line;
-				
 			var _fn_starts_at = string_pos("function", _cur_line);
 			var _fn_ends_at = string_pos_ext("(", _cur_line, _fn_starts_at);
-			if (_fn_starts_at > 0 && _fn_ends_at > 0 && !string_pos("@func", _cur_line)) {
+			var _skip_lines_with_these_words = [
+				"@",
+				"//",
+				"__",
+				"new "
+			];
+			var _skip_lines_len = array_length(_skip_lines_with_these_words);
+			var _should_skip_line = false;
+			for (var j = 0; j < _skip_lines_len; j++) {
+				if (string_pos(_skip_lines_with_these_words[j], _cur_line) > 0) {
+					_should_skip_line = true;
+					break;
+				}
+			}
+			
+			if (_fn_starts_at > 0 && _fn_ends_at > 0 && !_should_skip_line) {
 				var _fn_name = string_copy(_cur_line, _fn_starts_at + 8, _fn_ends_at - (_fn_starts_at + 8));
 				_fn_name = string_trim(_fn_name);
 
 				if (string_pos("=", _fn_name)) continue;
 				if (_fn_name != "") {
-					array_push(_fns, { name: _fn_name, coverage: false });
+					array_push(_fns, { name: _fn_name, covered: false });
 				}
 			}
 		}
+		
+		// If there are functions inside the file
 		if (array_length(_fns) > 0) {
 			array_sort(_fns, true);
 			var _fn_name = string_copy(
@@ -380,11 +440,13 @@ function __gmtl_internal_fn_find_coverage_files() {
 				fn_list: _fns
 			});
 		}
+		
 		file_text_close(_file);
 	}
 }
 
 /// @func	__gmtl_internal_fn_show_coverage_table()
+/// @ignore
 function __gmtl_internal_fn_show_coverage_table() {
 	var _coverage_len = array_length(gmtl_coverage_files);
 	show_debug_message("Coverage Results per File:");
@@ -407,4 +469,21 @@ function __gmtl_internal_fn_show_coverage_table() {
 	}
 	
 	show_debug_message(gmtl_coverage_table);
+}
+
+/// @func	__gmtl_internal_fn_set_key_state(key, press)
+/// @param	{real}		key
+/// @param	{boolean}	press
+/// @ignore
+function __gmtl_internal_fn_set_key_state(_key, _press) {
+	gmtl_internal.keys[$ _key] = _press;
+}
+
+/// @func	__gmtl_internal_fn_set_gamepad_button_state(device, button, press)
+/// @param	{real}		device
+/// @param	{real}		button
+/// @param	{boolean}	press
+/// @ignore
+function __gmtl_internal_fn_set_gamepad_button_state(_device, _btn, _press) {
+	gmtl_internal.gamepad[_device][$ _btn] = _press;
 }

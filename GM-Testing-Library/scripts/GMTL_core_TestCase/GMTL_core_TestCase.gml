@@ -1,6 +1,6 @@
 /// @func	TestCase(value)
 /// @param	{any}	value
-/// @param	{array}	value
+/// @param	{array}	args
 function TestCase(_val, _args) constructor {
 	__internal_value = _val;
 	__internal_args = _args;
@@ -489,30 +489,5 @@ function TestCase(_val, _args) constructor {
 		} else {
 			gmtl_test_status = __gmtl_test_status.SUCCESS;
 		}
-	}
-}
-
-/// @func	GTML_MouseState()
-function GTML_MouseState() constructor {
-	press	= false;
-	hold	= false;
-	release	= false;
-	
-	static reset = function () {
-		self.press = false;
-		self.hold = false;
-		self.release = false;
-	}
-	
-	static resetHold = function () {
-		self.hold = false;
-	}
-	
-	static resetRelease = function () {
-		self.release = false;
-	}
-	
-	static resetPress = function () {
-		self.press = false;
 	}
 }

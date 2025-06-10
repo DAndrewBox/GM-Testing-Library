@@ -1,12 +1,12 @@
 /// @func	suite(fn)
-/// @param	{function}	fn
+/// @param	{GMFunction}	fn
 function suite(_suite) {
 	__gmtl_internal_fn_suite_add_to_queue(_suite);
 }
 
 /// @func	describe(name, fn)
 /// @param	{string}	name
-/// @param	{function}	fn
+/// @param	{GMFunction}	fn
 function describe(_name, _fn) {
 	gmtl_suite_continue = true;
 	gmtl_indent = 0;
@@ -35,16 +35,13 @@ function describe(_name, _fn) {
 
 /// @func	it(name, fn, args)
 /// @param	{string}		name
-/// @param	{function}	fn
+/// @param	{GMFunction}	fn
 /// @param	{array}		args
 function it(_name, _fn, _args = []) {
 	gmtl_test_status = __gmtl_test_status.RUN;
 	gmtl_indent = 1;
 	gmtl_coverage_tests.total++;
 	
-	gmtl_internal.keys.hold		= vk_nokey;
-	gmtl_internal.keys.press	= vk_nokey;
-	gmtl_internal.keys.release	= vk_nokey;
 	__gmtl_internal_fn_mouse_reset();
 	
 	if (!gmtl_suite_continue) {
@@ -75,10 +72,11 @@ function it(_name, _fn, _args = []) {
 			__gmtl_internal_fn_log_test_failed(_name, _time);
 			gmtl_coverage_tests.failed++;
 			gmtl_suite_last_failed = true;
-			gmtl_indent = 2;
+			gmtl_indent = 1;
 			var _tests_stacktrace_len = array_length(gmtl_test_log);
 			for (var i = 0; i < _tests_stacktrace_len; i++) {
-				__gmtl_internal_fn_log(gmtl_test_log[i]);
+				var _prefix_pipe = i != _tests_stacktrace_len - 1 ? "├── " : "└── ";
+				__gmtl_internal_fn_log(_prefix_pipe + gmtl_test_log[i]);
 			}
 		}
 	} catch(e) {
@@ -86,46 +84,57 @@ function it(_name, _fn, _args = []) {
 		__gmtl_internal_fn_log_test_failed(_name, _time);
 		gmtl_coverage_tests.failed++;
 		
-		gmtl_indent = 2;
+		gmtl_indent = 1;
 		var _tests_stacktrace_len = array_length(gmtl_test_log);
 		for (var i = 0; i < _tests_stacktrace_len; i++) {
-			__gmtl_internal_fn_log(gmtl_test_log[i]);
+			var _prefix_pipe = i != _tests_stacktrace_len - 1 ? "├── " : "└── ";
+			__gmtl_internal_fn_log(_prefix_pipe + gmtl_test_log[i]);
 		}
-		__gmtl_internal_fn_log(e.message);
-		__gmtl_internal_fn_log(
-			string_copy(e.longMessage, string_pos("(line", e.longMessage), string_length(e.longMessage) - string_pos("(line", e.longMessage))
-		);
+		
+		if (!_tests_stacktrace_len) {
+			__gmtl_internal_fn_log("├── " + e.message);
+			__gmtl_internal_fn_log(
+				"└── " + 
+				string_copy(e.longMessage, string_pos("(line", e.longMessage), string_length(e.longMessage) - string_pos("(line", e.longMessage))
+			);
+		}
 		
 		gmtl_suite_last_failed = true;
 		gmtl_suite_continue = false;
 	} finally {
+		// Resets indentation
 		gmtl_indent = 1;
 		gmtl_test_log = [];
+		
+		// Executes the afterEach() events
 		if (is_callable(gmtl_test_after_each)) {
 			script_execute(gmtl_test_after_each);
 		}
+		
+		// Resets all timesources to prevent timesource leaks between tests
+		gmtl_timesources = [];
 	}
 }
 
 /// @func	section(name, fn)
-/// @param	{string}	name
-/// @param	{function}	fn
+/// @param	{string}		name
+/// @param	{GMFunction}	fn
 function section(_name, _fn) {
 	describe(_name, _fn);
 }
 
 /// @func	test(name, fn, args)
-/// @param	{string}	name
-/// @param	{function}	fn
-/// @param	{array}		args
+/// @param	{string}		name
+/// @param	{GMFunction}	fn
+/// @param	{array}			args
 function test(_name, _fn, _args = []) {
 	it(_name, _fn, _args);
 }
 
 /// @func	skip(name, fn, args)
-/// @param	{string}	name
-/// @param	{function}	fn
-/// @param	{array}		args
+/// @param	{string}		name
+/// @param	{GMFunction}	fn
+/// @param	{array}			args
 function skip(_name, _fn, _args = []) {
 	gmtl_test_status = __gmtl_test_status.SKIP;
 	gmtl_indent = 1;
@@ -138,9 +147,9 @@ function skip(_name, _fn, _args = []) {
 }
 
 /// @func	each(name, fn, cases)
-/// @param	{string}	name
-/// @param	{function}	fn
-/// @param	{array}		cases
+/// @param	{string}		name
+/// @param	{GMFunction}	fn
+/// @param	{array}			cases
 function each(_name, _fn, _cases) {
 	var _cases_len = array_length(_cases);
 	var _name_with_params;

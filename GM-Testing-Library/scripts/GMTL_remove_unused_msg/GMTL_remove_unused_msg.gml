@@ -1,4 +1,4 @@
-
+/// @ignore
 function __gmtl_internal_remove_syntax_errors() {
 	if (false) {
 		#region // Remove mistake syntax errors "variable referenced once".

@@ -78,7 +78,7 @@ suite(function() {
 				return _a + _b;
 			};
 			expect(_addNumbers, [1, 1]).toHaveReturned();
-			expect(_addNumbers, [1, 1]).toHaveReturnedWith(3);
+			expect(_addNumbers, [1, 1]).toHaveReturnedWith(2);
 			expect(_addNumbers).toHaveReturnedWith(undefined);
 			expect(_addNumbers, [1]).toHaveReturnedWith(undefined);
 			expect(_addNumbers, ["1", 2]).toHaveReturnedWith(undefined);
@@ -231,6 +231,63 @@ suite(function() {
 		// You can make this test pass if you move it before the failed test.
 		it("Should be skipped after suite failure", function() {
 			show_message_async("This should never be seen :)");
+		});
+	});
+});
+
+suite(function() {
+	describe("GameMaker's Testing Library - Demo - Suite 3 - Describe 1", function () {
+		it("Should create a time source, and successfully start and execute it", function () {
+			var _inst = create(100, 100, o_gmtl_demo_timer);
+			expect(_inst.timer_test_value).toBeEqual(0);
+			
+			// Creates a new timesource and starts
+			var _new_timesource = simulateTimeSource(time_source_game, 5, time_source_units_frames, function(_inst) {
+				// Modify the test value
+				_inst.timer_test_value = 100;
+			}, [_inst]);
+			_new_timesource.start();
+			
+			simulateFrameWait(5);
+			expect(_inst.timer_test_value).toBeEqual(100);
+			
+			instance_destroy(_inst);
+		});
+	
+		it("Should create a time source, and successfully start and stop it before callback execution", function () {
+			var _inst = create(100, 100, o_gmtl_demo_timer);
+			expect(_inst.timer_test_value).toBeEqual(0);
+			
+			// Creates a new timesource and starts
+			var _new_timesource = simulateTimeSource(time_source_game, 5, time_source_units_frames, function(_inst) {
+				// Modify the test value
+				_inst.timer_test_value = 100;
+			}, [_inst]);
+			_new_timesource.start();
+			
+			simulateFrameWait(3);
+			
+			// Stops before execution
+			_new_timesource.stop();
+			
+			simulateFrameWait(2);
+			
+			// Value should keep being the same initial value
+			expect(_inst.timer_test_value).toBeEqual(0);
+			
+			instance_destroy(_inst);
+		});
+		
+		it("Should simulate a call_later() and successfully execute the callback", function () {
+			expect(variable_global_get("__gmtl_demo_internal_value")).toBeEqual(undefined);
+			
+			// Creates a new timesource and starts
+			simulateCallLater(10, time_source_units_frames, function() {
+				global.__gmtl_demo_internal_value = 33;
+			});
+			simulateFrameWait(10);
+			expect(variable_global_exists("__gmtl_demo_internal_value")).toBeTruthy();
+			expect(global.__gmtl_demo_internal_value).toBeEqual(33);
 		});
 	});
 });

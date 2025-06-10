@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GMTL_core_MouseState",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GMTL_core_MouseState",
+  "parent":{
+    "name":"Core",
+    "path":"folders/Libraries/GMTL/Core.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,2 @@
+log = "";
+log_lines = [];

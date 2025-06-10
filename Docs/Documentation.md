@@ -21,7 +21,7 @@ This is the official and up-to-date documentation for the **GameMaker's Testing 
   - [afterAll](#afterall)
 - [Common Matchers](#common-matchers)
   - [toBe](#tobe)
-  - [toEqual](#toequal)
+  - [toBeEqual](#tobeequal)
   - [toContain](#tocontain)
   - [toHaveLength](#tohavelength)
   - [toHaveProperty](#tohaveproperty)
@@ -259,13 +259,13 @@ Here you will find all the matchers you can use after the `expect` function to m
 
 `toBe(expected)`
 
-The `toBe` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays, but not structs. For structs, you can use the `toEqual` matcher.
+The `toBe` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays, but not structs. For structs, you can use the `toBeEqual` matcher.
 
-### toEqual
+### toBeEqual
 
-`toEqual(expected)`
+`toBeEqual(expected)`
 
-The `toEqual` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays and structs.
+The `toBeEqual` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays and structs.
 
 ### toContain
 
