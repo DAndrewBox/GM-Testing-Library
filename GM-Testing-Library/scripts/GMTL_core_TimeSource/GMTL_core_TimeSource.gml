@@ -24,6 +24,7 @@ function GMTL_TimeSource(_parent, _period, _units, _callback, _args = [], _reps 
 	/// @func	startLater(frames)
 	/// @param	{real}	frames
 	/// @desc	Starts the frame check after a defined set of frames. Adds a delay to the start()
+	/// @ignore
 	function startLater(_frames) {
 		__internal_ts_frames = -abs(_frames - 1);
 	}
@@ -38,6 +39,7 @@ function GMTL_TimeSource(_parent, _period, _units, _callback, _args = [], _reps 
 	
 	/// @func	frameCheck()
 	/// @desc	Internal check for every virtually simulated frame.
+	/// @ignore
 	function frameCheck() {
 		if (__internal_ts_reps_current >= __internal_ts_reps_max) return;
 		

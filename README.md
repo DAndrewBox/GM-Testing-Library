@@ -13,7 +13,16 @@
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2023.4+-039e5c?logo=gamemaker&labelColor=000)
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2024-039e5c?logo=gamemaker&labelColor=000)
 
-### 📅 Last updated: 2024-07-19
+### 📅 Last updated: 2025-06-10
+
+---
+
+#### 🏆 This project has been nominated and won for the [**GameMaker Awards 2024**](https://gamemaker.io/es/blog/gamemaker-awards-2024-winners). Thanks a lot for your help!
+
+<br />
+<p align="center">
+  <img src="./logo-winner.png" height="200px" alt="GameMaker Testing Library"/>
+</p>
 
 ---
 
