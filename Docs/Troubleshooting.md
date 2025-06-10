@@ -2,13 +2,17 @@
 
 This section contains common issues and solutions that you may encounter while using the library. I'll be updating this section as I find new issues or solutions.
 
-## 🚧 Common Issue
+## 🚧 Common Issues
 
-### mouse_x and mouse_y are not working after installing the library
+### `mouse_x` and `mouse_y` variables are not working after installing the library.
 
 This issue is caused by the library's `mouse_x` and `mouse_y` variables being used in the project. To fix this, you need to change the variable names in the library's scripts. You can do this by removing the library from the project while testing.
 
 It's known that with GUI scale changes the mouse_x and mouse_y variables are not updated correctly. This is a known issue and it's being worked on.
+
+### How can I test async functions with GMTL?
+
+You cannot test async functions with GMTL. This is a known limitation of the library. I'm working on a solution for this, but it's not ready yet and it's not in the priority list unless more people request it.
 
 ---
 

@@ -44,8 +44,50 @@ Originally created by [**@DAndrewBox**](https://twitter.com/DAndrewBox_).
 - [🔧 Versioning & Compatibility](https://github.com/DAndrewBox/GM-Testing-Library/wiki)
 - [🌱 Installation](https://github.com/DAndrewBox/GM-Testing-Library/wiki/Getting-Started)
 - [📚 Documentation](https://github.com/DAndrewBox/GM-Testing-Library/wiki/Documentation)
+- [🧾 Usage Example](#-usage-example)
 - [📜 License](#-license)
 - [🤝 Contributing](#-contributing)
+
+---
+
+### 🧾 Usage Example
+
+```gml
+// test_player.gml
+suite(function() {
+  section("Test Player Behaviours", function() {
+    test("Should create obj_Player", function() {
+      var _obj = create(0, 0, obj_player);
+      expect(_obj).toBeGreaterThan(-1);
+      instance_destroy(_obj);
+    });
+
+    test("Should move obj_Player to the right", function() {
+      var _obj = create(0, 0, obj_player);
+
+      simulateKeyHold(vk_right);
+      simulateFrameWait(1);
+      simulateKeyRelease(vk_right);
+
+      expect(_obj.x).toBeGreaterThan(_obj.xstart);
+
+      instance_destroy(_obj);
+    });
+
+    test("Should move obj_Player to the left", function() {
+      var _obj = create(0, 0, obj_player);
+
+      simulateKeyHold(vk_left);
+      simulateFrameWait(1);
+      simulateKeyRelease(vk_left);
+
+      expect(_obj.x).toBeLessThan(_obj.xstart);
+
+      instance_destroy(_obj);
+    });
+  });
+});
+```
 
 ---
 

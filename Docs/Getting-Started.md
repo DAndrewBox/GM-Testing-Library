@@ -24,7 +24,7 @@
 
 ## ⚡ Quick Start
 
-1. Create a new script in your project.
+1. Create a new empty script anywhere and call it however you want, for example, `test_add_two_numbers`.
 2. Add the following code to the script:
 
 ```gml
@@ -45,9 +45,7 @@ function add_two_numbers(a, b) {
 }
 ```
 
-4. Create a new script anywhere and call it however you want, for example, `test_add_two_numbers`.
-
-5. Add a section to the suite:
+4. Add a section to the suite:
 
 ```gml
 suite("My first test suite", function() {
@@ -57,7 +55,7 @@ suite("My first test suite", function() {
 });
 ```
 
-6. Add some tests to the section:
+5. Add some tests to the section:
 
 ```gml
 suite("My first test suite", function() {
@@ -79,7 +77,7 @@ suite("My first test suite", function() {
 });
 ```
 
-7. Run project and see the results in the console. You should see something like this:
+6. Run project and see the results in the console. You should see something like this:
 
 ```
 ------- Add two numbers -------
@@ -94,4 +92,4 @@ Tests: 3 passed, 3 total. (100% success)
 All tests finished in 0.03ms.
 ```
 
-8. Done! You have created your first test suite with the GameMaker Testing Library.
+7. Done! You have created your first test suite with the GameMaker Testing Library.

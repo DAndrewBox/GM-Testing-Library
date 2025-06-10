@@ -17,7 +17,7 @@
 
 ## 🔧 Versioning & Compatibility
 
-The minimum version of GameMaker required to use this library is **GameMaker Studio 2023.4**. This is because it uses the _string templates_ and _string functions_ introduced in that version and previous like `string_split()`. The library is fully compatible with the latest version of GameMaker Studio 2024.x.
+The minimum version of GameMaker required to use this library is **GameMaker 2023.4**. This is because it uses the _string templates_ and _string functions_ introduced in that version and previous like `string_split()`. The library is fully compatible with the latest version of GameMaker 2024.x.
 
 ✅: Fully compatible. (\*: Recommended for this version.)
 
