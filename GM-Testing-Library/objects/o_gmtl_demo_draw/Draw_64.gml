@@ -12,6 +12,6 @@ if (log != "") {
 	for (var i = 0; i < _log_lines_len; i++) {
 		draw_set_color(log_lines[i].color);
 		draw_text(8, 8 + _yoff, log_lines[i].text);
-		_yoff += 17;
+		_yoff += 18;
 	}
 }

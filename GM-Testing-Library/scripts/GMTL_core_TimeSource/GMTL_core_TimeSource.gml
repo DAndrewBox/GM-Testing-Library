@@ -1,4 +1,13 @@
+///	@func	GMTL_TimeSource(parent, period, units, callback, args, repetitions, expiryType)
+///	@param	{GMTimeSourceParent}	parent
+///	@param	{real}					period
+///	@param	{GMTimeSourceUnit}		units
+///	@param	{GMFunction}			callback
+///	@param	{array}					args
+///	@param	{real}					reps
+///	@param	{GMTimeSourceExpiry}	expiryType
 function GMTL_TimeSource(_parent, _period, _units, _callback, _args = [], _reps = 1, _expiry = undefined) constructor {
+	__internal_id = current_time;
 	/* Time to execute the callback */
 	__internal_ts_period = _period * (_units == time_source_units_frames ? 1 : game_get_speed(gamespeed_fps));
 	/* The frame count that has been simulated into this timesource */
@@ -35,6 +44,38 @@ function GMTL_TimeSource(_parent, _period, _units, _callback, _args = [], _reps 
 		__internal_ts_state = time_source_state_stopped;
 		__internal_ts_frames = 0;
 		__internal_ts_reps_current = 0;
+	}
+	
+	/// @func	pause()
+	/// @desc	Pauses the timesource to not increase frames every frame.
+	function pause() {
+		__internal_ts_state = time_source_state_paused;
+	}
+	
+	/// @func	resume()
+	/// @desc	Resumes an already paused timesource.
+	function resume() {
+		if (__internal_ts_state == time_source_state_paused) {
+			__internal_ts_state = time_source_state_active;
+		} else {
+			__gmtl_internal_fn_log($"WARNING: Trying to resume a timesource that is not paused. Timesource ID: ${__internal_id}");
+		}
+	}
+	
+	/// @func	destroy()
+	/// @desc	Destroys the timesource and removes it from the global timesources array to be simulated.
+	function destroy() {
+		var _all_ts_len = array_length(gmtl_timesources);
+		for (var i = 0; i < _all_ts_len; i++) {
+			if (is_struct(gmtl_timesources[i]) && gmtl_timesources[i].__internal_id == __internal_id) {
+				stop();
+				delete gmtl_timesources[i];
+			}
+		}
+		
+		gmtl_timesources = array_filter(gmtl_timesources, function (_elem) {
+			return is_struct(_elem);
+		});
 	}
 	
 	/// @func	frameCheck()

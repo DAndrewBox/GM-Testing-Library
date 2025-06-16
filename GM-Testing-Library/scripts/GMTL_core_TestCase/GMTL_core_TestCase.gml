@@ -32,8 +32,8 @@ function TestCase(_val, _args) constructor {
 			__gmtl_internal_fn_stacktrace();
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBe({_expectedResult}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {_expectedResult}");
-			array_push(gmtl_test_log, $"- Recieved Result: {__internal_value}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _expectedResult : $"{__not_str_expected} {_expectedResult}"}");
+			array_push(gmtl_test_log, $"- Received Result: {__internal_value}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -64,8 +64,8 @@ function TestCase(_val, _args) constructor {
 			__gmtl_internal_fn_stacktrace();
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeEqual({_expectedResult}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {_expectedResult}");
-			array_push(gmtl_test_log, $"- Recieved Result: {__internal_value}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _expectedResult : $"{__not_str_expected} {_expectedResult}"}");
+			array_push(gmtl_test_log, $"- Received Result: {__internal_value}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -97,8 +97,8 @@ function TestCase(_val, _args) constructor {
 		if (!_isValid) {
 			__gmtl_internal_fn_stacktrace();
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toHaveReturned():");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {true}");
-			array_push(gmtl_test_log, $"- Recieved Result: {__internal_value}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? true : $"{__not_str_expected} {true}"}");
+			array_push(gmtl_test_log, $"- Received Result: {__internal_value}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {			
@@ -129,8 +129,8 @@ function TestCase(_val, _args) constructor {
 			}
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}, {__internal_args}).toHaveReturnedWith({_expectedResult}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {_expectedResult}");
-			array_push(gmtl_test_log, $"- Recieved Result: {_received}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _expectedResult : $"{__not_str_expected} {_expectedResult}"}");
+			array_push(gmtl_test_log, $"- Received Result: {_received}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -167,8 +167,8 @@ function TestCase(_val, _args) constructor {
 			var _type_of_msg = $"<Invalid Type: {_typeOf}>";
 			_type_of_msg = (_typeInvalid ? _type_of_msg  : string(_len));
 			array_push(gmtl_test_log, $">expect({__internal_value}){__not_str_method}.toHaveLength({_n}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {_n}");
-			array_push(gmtl_test_log, $"- Recieved Result: {_type_of_msg}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _n : $"{__not_str_expected} {_n}"}");
+			array_push(gmtl_test_log, $"- Received Result: {_type_of_msg}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -218,16 +218,16 @@ function TestCase(_val, _args) constructor {
 			var _expected_message = (!_valueIsUndefined ? _expected_not_undefined_msg : _expected_undefined_msg);
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toHaveProperty({_key}, {_value}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {_expected_message}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _expected_message : $"{__not_str_expected} {_expected_message}"}");
 			
 			if (_typeInvalid) {
-				array_push(gmtl_test_log, $"- Recieved Result: <Invalid Type: {_typeOf}>");
+				array_push(gmtl_test_log, $"- Received Result: <Invalid Type: {_typeOf}>");
 			} else {
 				var _isStruct = is_struct(__internal_value);
 				if (_isStruct) {
-					array_push(gmtl_test_log, $"- Recieved Result: {_key} = {__internal_value[$ _key]}");
+					array_push(gmtl_test_log, $"- Received Result: {_key} = {__internal_value[$ _key]}");
 				} else {
-					array_push(gmtl_test_log, $"- Recieved Result: {_key} = {variable_instance_get(__internal_value, _key)}");
+					array_push(gmtl_test_log, $"- Received Result: {_key} = {variable_instance_get(__internal_value, _key)}");
 				}
 			}
 			gmtl_test_status = __gmtl_test_status.FAILED;
@@ -261,9 +261,9 @@ function TestCase(_val, _args) constructor {
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeGreaterThan({_n}):");
 			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {__internal_value} > {_n}");
 			if (_typeInvalid) {
-				array_push(gmtl_test_log, $"- Recieved Result: <Invalid Type: {_typeOf}>");
+				array_push(gmtl_test_log, $"- Received Result: <Invalid Type: {_typeOf}>");
 			} else {
-				array_push(gmtl_test_log, $"- Recieved Result: {__internal_value} <= {_n}");
+				array_push(gmtl_test_log, $"- Received Result: {__internal_value} <= {_n}");
 			}
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
@@ -294,9 +294,9 @@ function TestCase(_val, _args) constructor {
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeGreaterThanOrEqual({_n}):");
 			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {__internal_value} >= {_n}");
 			if (_typeInvalid) {
-				array_push(gmtl_test_log, $"- Recieved Result: <Invalid Type: {_typeOf}>");
+				array_push(gmtl_test_log, $"- Received Result: <Invalid Type: {_typeOf}>");
 			} else {
-				array_push(gmtl_test_log, $"- Recieved Result: {__internal_value} < {_n}");
+				array_push(gmtl_test_log, $"- Received Result: {__internal_value} < {_n}");
 			}
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
@@ -327,9 +327,9 @@ function TestCase(_val, _args) constructor {
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeLessThan({_n}):");
 			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {__internal_value} < {_n}");
 			if (_typeInvalid) {
-				array_push(gmtl_test_log, $"- Recieved Result: <Invalid Type: {_typeOf}>");
+				array_push(gmtl_test_log, $"- Received Result: <Invalid Type: {_typeOf}>");
 			} else {
-				array_push(gmtl_test_log, $"- Recieved Result: {__internal_value} >= {_n}");
+				array_push(gmtl_test_log, $"- Received Result: {__internal_value} >= {_n}");
 			}
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
@@ -360,9 +360,9 @@ function TestCase(_val, _args) constructor {
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeLessThanOrEqual({_n}):");
 			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {__internal_value} <= {_n}");
 			if (_typeInvalid) {
-				array_push(gmtl_test_log, $"- Recieved Result: <Invalid Type: {_typeOf}>");
+				array_push(gmtl_test_log, $"- Received Result: <Invalid Type: {_typeOf}>");
 			} else {
-				array_push(gmtl_test_log, $"- Recieved Result: {__internal_value} > {_n}");
+				array_push(gmtl_test_log, $"- Received Result: {__internal_value} > {_n}");
 			}
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
@@ -392,8 +392,8 @@ function TestCase(_val, _args) constructor {
 			__gmtl_internal_fn_stacktrace();
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeFalsy():");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {false}");
-			array_push(gmtl_test_log, $"- Recieved Result: {true}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? false : $"{__not_str_expected} {false}"}");
+			array_push(gmtl_test_log, $"- Received Result: {true}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -423,7 +423,7 @@ function TestCase(_val, _args) constructor {
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeTruthy():");
 			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} {true}");
-			array_push(gmtl_test_log, $"- Recieved Result: {false}");
+			array_push(gmtl_test_log, $"- Received Result: {false}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -480,9 +480,9 @@ function TestCase(_val, _args) constructor {
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toContain({_value}):");
 			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected} Found {_expected_message}");
 			if (_typeInvalid) {
-				array_push(gmtl_test_log, $"- Recieved Result: <Invalid Type: {_typeOf}>");
+				array_push(gmtl_test_log, $"- Received Result: <Invalid Type: {_typeOf}>");
 			} else {
-				array_push(gmtl_test_log, $"- Recieved Result: Not Found.");
+				array_push(gmtl_test_log, $"- Received Result: Not Found.");
 			}
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;

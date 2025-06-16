@@ -17,13 +17,15 @@ gml_pragma("global", "GMTL_core_TestCase()");
 gml_pragma("global", "GMTL_core_TimeSource()");
 gml_pragma("global", "GMTL_core_MouseState()");
 
+gml_pragma("global", "__gmtl_setup()");
 gml_pragma("global", "__gmtl_init()");
 
-/// @func __gmtl_init()
+/// @func __gmtl_setup()
 /// @ignore
-function __gmtl_init() {
+function __gmtl_setup() {
 	gmtl_internal = {
 		indent:	0,
+		indent_describe_offset: 0,
 		log:	"",
 		tests: {
 			log:	[],
@@ -68,14 +70,21 @@ function __gmtl_init() {
 			y:		0,
 		},
 		timesources: [],
+		initializing: true,
 		finished: false,
 	};
+}
+
+/// @func __gmtl_init()
+/// @ignore
+function __gmtl_init() {
+	gmtl_internal.initializing = false;
 
 	// Skip all tests
 	if (!gmtl_run_at_start) return;
 
 	// Run all tests a few frames after project start.
-	call_later(gmtl_wait_frames_before_start, time_source_units_frames, function() {
+	original_call_later(gmtl_wait_frames_before_start, time_source_units_frames, function() {
 		//__gmtl_internal_fn_find_coverage_files();	// @TODO: Feature not ready. Possibly v1.2.
 		
 		var _t_start = get_timer();
@@ -90,6 +99,16 @@ function __gmtl_init() {
 		delete gmtl_internal.tests;
 		delete gmtl_internal.suites;
 		delete gmtl_internal.coverage;
-		gmtl_internal.timesources = undefined;
+		
+		// Remove all timesources references
+		var _all_ts_len = array_length(gmtl_timesources);
+		for (var i = 0; i < _all_ts_len; i++) {
+			if (is_struct(gmtl_timesources[i])) {
+				delete gmtl_timesources[i];
+			} else {
+				gmtl_timesources[i] = undefined;
+			}
+		}
+		gmtl_timesources = [];
 	});
 }

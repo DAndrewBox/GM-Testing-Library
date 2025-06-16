@@ -3,7 +3,7 @@
 /// @ignore
 function __gmtl_internal_fn_log(_msg) {
 	var _pad_left = "";
-	for (var i = 0; i < gmtl_indent * 2; i++) {
+	for (var i = 0; i < ((gmtl_indent_offset - 1) + gmtl_indent) * 2; i++) {
 		_pad_left += "\t";
 	}
 	_msg = _pad_left + _msg;
@@ -16,7 +16,7 @@ function __gmtl_internal_fn_log(_msg) {
 /// @param	{real}	time
 /// @ignore
 function __gmtl_internal_fn_log_test_success(_msg, _time) {
-	__gmtl_internal_fn_log($"✔ {_msg} ({_time / 1000}ms)");
+	__gmtl_internal_fn_log($"├── ✔ {_msg} ({_time / 1000}ms)");
 }
 
 /// @func	__gmtl_internal_fn_log_test_failed(message, time)
@@ -24,14 +24,23 @@ function __gmtl_internal_fn_log_test_success(_msg, _time) {
 /// @param	{real}	time
 /// @ignore
 function __gmtl_internal_fn_log_test_failed(_msg, _time) {
-	__gmtl_internal_fn_log($"❌ {_msg} ({_time / 1000}ms)");
+	__gmtl_internal_fn_log($"├── ❌ {_msg} ({_time / 1000}ms)");
 }
 
 /// @func	__gmtl_internal_fn_log_test_skipped(message)
 /// @param	{string}	message
 /// @ignore
 function __gmtl_internal_fn_log_test_skipped(_msg) {
-	__gmtl_internal_fn_log($"⚠ (Skipped) {_msg}");
+	__gmtl_internal_fn_log($"├── ⚠ (Skipped) {_msg}");
+}
+
+/// @func	__gmtl_internal_fn_has_finished()
+function __gmtl_internal_fn_has_finished() {
+	if (!variable_global_exists("__gmtl_internal")) {
+		__gmtl_setup();
+	}
+	
+	return gmtl_internal.finished;
 }
 
 /// @func	__gmtl_internal_fn_suite_add_to_queue(suite)
@@ -43,7 +52,6 @@ function __gmtl_internal_fn_suite_add_to_queue(_suite) {
 		gmtl_coverage_suites.total++;
 	}, [_suite]);
 	time_source_start(_ts);
-	
 }
 
 /// @func	__gmtl_internal_fn_wait_for(instance, time, unit)
@@ -139,11 +147,11 @@ function __gmtl_internal_fn_gamepad_button_check_pressed(_device, _btn) {
 	return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
 }
 
-/// @func	__gmtl_internal_gamepad_button_check_released(device, button)
+/// @func	__gmtl_internal_fn_gamepad_button_check_released(device, button)
 /// @param	{real}	device
 /// @param	{real}	button
 /// @ignore
-function __gmtl_internal_gamepad_button_check_released(_device, _btn) {
+function __gmtl_internal_fn_gamepad_button_check_released(_device, _btn) {
 	return original_gamepad_button_check_released(_device, _btn) || !gmtl_internal.gamepad[_device][$ _btn];
 }
 
@@ -255,7 +263,7 @@ function __gmtl_internal_fn_mouse_reset() {
 /// @func	__gmtl_internal_fn_mouse_get_x()
 /// @ignore
 function __gmtl_internal_fn_mouse_get_x() {
-	if (gmtl_internal.finished) {
+	if (gmtl_has_finished) {
 		var _w_camera = camera_get_view_width(view_camera[view_current]);
 		var _w_window = window_get_width(); 
 		var _x = (display_mouse_get_x() - window_get_x()) * (1 / _w_window);
@@ -270,7 +278,7 @@ function __gmtl_internal_fn_mouse_get_x() {
 /// @func	__gmtl_internal_fn_mouse_get_y()
 /// @ignore
 function __gmtl_internal_fn_mouse_get_y() {
-	if (gmtl_internal.finished) {
+	if (gmtl_has_finished) {
 		var _h_camera = camera_get_view_height(view_camera[view_current]);
 		var _h_window = window_get_height(); 
 		var _y = (display_mouse_get_y() - window_get_y()) * (1 / _h_window);
@@ -302,6 +310,7 @@ function __gmtl_internal_fn_get_fn_index(_fn) {
 function __gmtl_internal_fn_call_suite(_suite) {
 	gmtl_suite_last_failed = false;
 	try {
+		gmtl_indent_offset = 0;
 		_suite();
 		if (gmtl_suite_last_failed) {
 			/*throw {
@@ -321,8 +330,6 @@ function __gmtl_internal_fn_call_suite(_suite) {
 			gmtl_indent = _prev_indent;
 			gmtl_coverage_suites.failed++;
 		}
-	} finally {
-		__gmtl_internal_fn_log(string_repeat("=", 64));
 	}
 }
 
@@ -346,7 +353,7 @@ function __gmtl_internal_fn_finish_suites(_t_start) {
 		
 	_time = (get_timer() - _t_start) / 1000;
 	_time = _time > 1000 ? $"{_time / 1000}s" : $"{_time}ms"
-	__gmtl_internal_fn_log($"All tests finished in {_time}.\n");
+	__gmtl_internal_fn_log($"\nAll tests finished in {_time}.\n");
 	gmtl_internal.finished = true;
 	show_debug_message(gmtl_log);
 }
@@ -486,4 +493,100 @@ function __gmtl_internal_fn_set_key_state(_key, _press) {
 /// @ignore
 function __gmtl_internal_fn_set_gamepad_button_state(_device, _btn, _press) {
 	gmtl_internal.gamepad[_device][$ _btn] = _press;
+}
+
+///	@func	__gmtl_internal_fn_time_source_create(parent, period, units, callback, args, repetitions, expiryType)
+///	@param	{GMTimeSourceParent}	parent
+///	@param	{real}					period
+///	@param	{GMTimeSourceUnit}		units
+///	@param	{GMFunction}			callback
+///	@param	{array}					args
+///	@param	{real}					reps
+///	@param	{GMTimeSourceExpiry}	expiryType
+/// @ignore
+function __gmtl_internal_fn_time_source_create(_parent, _period, _units, _cb, _args = [], _reps = 1, _expiry = time_source_expire_nearest) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		var _ts = simulateTimeSource(_parent, _period, _units, _cb, _args, _reps, _expiry);
+		return _ts;
+	}
+	return original_time_source_create(_parent, _period, _units, _cb, _args, _reps, _expiry);
+}
+
+///	@func	__gmtl_internal_fn_time_source_start(id)
+///	@param	{GMTimeSource}	id
+/// @ignore
+function __gmtl_internal_fn_time_source_start(_ts) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		_ts.start();
+		return;
+	}	
+	original_time_source_start(_ts);
+}
+
+///	@func	__gmtl_internal_fn_time_source_stop(id)
+///	@param	{GMTimeSource}	id
+/// @ignore
+function __gmtl_internal_fn_time_source_stop(_ts) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		_ts.stop();	
+		return;
+	}
+	original_time_source_stop(_ts);
+}
+
+///	@func	__gmtl_internal_fn_time_source_pause(id)
+///	@param	{GMTimeSource}	id
+/// @ignore
+function __gmtl_internal_fn_time_source_pause(_ts) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		_ts.pause();
+		return;
+	}
+	original_time_source_pause(_ts);
+}
+
+///	@func	__gmtl_internal_fn_time_source_resume(id)
+///	@param	{GMTimeSource}	id
+/// @ignore
+function __gmtl_internal_fn_time_source_resume(_ts) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		_ts.resume();
+		return;
+	}
+	original_time_source_resume(_ts);
+}
+
+///	@func	__gmtl_internal_fn_time_source_destroy(id)
+///	@param	{GMTimeSource}	id
+/// @ignore
+function __gmtl_internal_fn_time_source_destroy(_ts) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		var _all_ts_len = array_length(gmtl_timesources);
+		for (var i = 0; i < _all_ts_len; i++) {
+			if (is_struct(gmtl_timesources[i]) && gmtl_timesources[i].__internal_id == _ts.__internal_id) {
+				_ts.stop();
+				delete gmtl_timesources[i];
+			}
+		}
+		
+		gmtl_timesources = array_filter(gmtl_timesources, function (_elem) {
+			return is_struct(_elem);
+		});
+		return;
+	}
+	original_time_source_destroy(_ts);
+}
+
+///	@func	__gmtl_internal_fn_call_later(period, units, callback, loop)
+///	@param	{real}					period
+///	@param	{GMTimeSourceUnit}		units
+///	@param	{GMFunction}			callback
+///	@param	{boolean				loop
+/// @ignore
+function __gmtl_internal_fn_call_later(_period, _units, _cb, _loop = false) {
+	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+		var _ts = simulateCallLater(_period, _units, _cb, _loop);
+		return _ts;
+	}
+	return original_call_later(_period, _units, _cb, _loop);
 }

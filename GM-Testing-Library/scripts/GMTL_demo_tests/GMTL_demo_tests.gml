@@ -195,8 +195,8 @@ suite(function() {
 			repeat (3) {
 				simulateMouseClickPress(mb_left, _inst.x + irandom_range(0, 16), _inst.y + irandom_range(0, 16));
 				simulateFrameWait(1);
+				simulateMouseClickRelease(mb_left);
 			}
-			simulateMouseClickRelease(mb_left);
 			expect(_inst.times_clicked_inside).toBeEqual(3);
 			
 			simulateMouseClickPress(mb_right, _inst.x + 8, _inst.y + 8);
@@ -289,6 +289,73 @@ suite(function() {
 			instance_destroy(_inst);
 		});
 		
+		it("Should create a time source, and successfully pause and resume it", function () {
+			var _inst = create(100, 100, o_gmtl_demo_timer);
+			expect(_inst.timer_test_value).toBeEqual(0);
+			
+			// Creates a new timesource and starts
+			var _new_timesource = simulateTimeSource(time_source_game, 5, time_source_units_frames, function(_inst) {
+				// Modify the test value
+				_inst.timer_test_value = 100;
+			}, [_inst]);
+			_new_timesource.start();
+			
+			simulateFrameWait(3);
+			
+			// Pause it before execution
+			_new_timesource.pause();
+			
+			// Wait 100 frames before resuming. Value should still remain the same
+			simulateFrameWait(100);
+			expect(_inst.timer_test_value).toBeEqual(0); 
+			
+			// Resume it after 100 frames, it should still need 2 frames before execution
+			_new_timesource.resume();
+			
+			simulateFrameWait(2);
+			
+			// Value should be changed after resume
+			expect(_inst.timer_test_value).toBeEqual(100);
+			
+			instance_destroy(_inst);
+		});
+		
+		it("Should create a time source, and successfully destroy it, and do not execute event", function () {
+			var _inst = create(100, 100, o_gmtl_demo_timer);
+			expect(_inst.timer_test_value).toBeEqual(0);
+			
+			// Creates a new timesource and starts
+			var _new_timesource = simulateTimeSource(time_source_game, 5, time_source_units_frames, function(_inst) {
+				// Modify the test value
+				_inst.timer_test_value = 100;
+			}, [_inst]);
+			_new_timesource.start();
+			
+			simulateFrameWait(3);
+			
+			// Destroys the timesource
+			_new_timesource.destroy();
+			
+			// Timesource should not be in inside the timesources array
+			var _ts_in_array = false;
+			var _all_ts_len = array_length(gmtl_timesources);
+			for (var i = 0; i < _all_ts_len; i++) {
+				if (gmtl_timesources[i].__internal_id == _new_timesource.__internal_id) {
+					_ts_in_array = true;
+					break;
+				}
+			}
+			expect(_ts_in_array).toBeFalsy();
+			
+			// Wait 2 more frames o expect execution (should not execute)
+			simulateFrameWait(2);
+			
+			// Value should keep being the same initial value
+			expect(_inst.timer_test_value).toBeEqual(0);
+			
+			instance_destroy(_inst);
+		});
+		
 		it("Should simulate a call_later() and successfully execute the callback", function () {
 			expect(variable_global_get("__gmtl_demo_internal_value")).toBeEqual(undefined);
 			
@@ -299,6 +366,16 @@ suite(function() {
 			simulateFrameWait(10);
 			expect(variable_global_exists("__gmtl_demo_internal_value")).toBeTruthy();
 			expect(global.__gmtl_demo_internal_value).toBeEqual(33);
+		});
+		
+		describe("A describe inside another describe.", function () {
+			it("This should always pass", function () {
+				expect(1).toBeEqual(1);
+			});
+			
+			it("This should always fail", function () {
+				expect(1 + 2).toBeEqual(5);
+			});
 		});
 	});
 });
