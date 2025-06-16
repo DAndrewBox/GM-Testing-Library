@@ -1,4 +1,4 @@
-
+/// @ignore
 function __gmtl_internal_remove_syntax_errors() {
 	if (false) {
 		#region // Remove mistake syntax errors "variable referenced once".
@@ -26,6 +26,8 @@ function __gmtl_internal_remove_syntax_errors() {
 		_ = simulateGamepadButtonPress;
 		_ = simulateGamepadButtonRelease;
 		_ = simulateGamepadButtonHold;
+		_ = simulateCallLater;
+		_ = simulateTimeSource;
 		_ = toBe;
 		_ = toBeEqual;
 		_ = toBeFalsy;
@@ -55,6 +57,15 @@ function __gmtl_internal_remove_syntax_errors() {
 		_ = __gmtl_internal_fn_mouse_check_button;
 		_ = __gmtl_internal_fn_mouse_check_button_pressed;
 		_ = __gmtl_internal_fn_mouse_check_button_released;
+		_ = __gmtl_internal_fn_find_coverage_files;
+		_ = __gmtl_internal_fn_show_coverage_table;
+		_ = filepath;
+		_ = covered;
+		_ = __gmtl_internal_fn_time_source_create;
+		_ = __gmtl_internal_fn_time_source_stop;
+		_ = __gmtl_internal_fn_time_source_pause;
+		_ = __gmtl_internal_fn_time_source_resume;
+		_ = __gmtl_internal_fn_time_source_destroy;
 		#endregion
 	}
 }

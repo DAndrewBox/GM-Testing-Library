@@ -1,5 +1,5 @@
 {
-  "$GMProject":"",
+  "$GMProject":"v1",
   "%Name":"GM-Testing-Library",
   "AudioGroups":[
     {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
@@ -31,11 +31,12 @@
     {"$GMFolder":"","%Name":"Tile Sets","folderPath":"folders/Tile Sets.yy","name":"Tile Sets","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Timelines","folderPath":"folders/Timelines.yy","name":"Timelines","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
+  "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.8.1.171",
+    "IDEVersion":"2024.13.1.193",
   },
   "name":"GM-Testing-Library",
   "resources":[
@@ -43,12 +44,16 @@
     {"id":{"name":"o_gmtl_demo_draw","path":"objects/o_gmtl_demo_draw/o_gmtl_demo_draw.yy",},},
     {"id":{"name":"o_gmtl_demo_timer","path":"objects/o_gmtl_demo_timer/o_gmtl_demo_timer.yy",},},
     {"id":{"name":"r_gmtl_demo","path":"rooms/r_gmtl_demo/r_gmtl_demo.yy",},},
+    {"id":{"name":"GMTL_core_MouseState","path":"scripts/GMTL_core_MouseState/GMTL_core_MouseState.yy",},},
     {"id":{"name":"GMTL_core_test_events","path":"scripts/GMTL_core_test_events/GMTL_core_test_events.yy",},},
     {"id":{"name":"GMTL_core_test_setup","path":"scripts/GMTL_core_test_setup/GMTL_core_test_setup.yy",},},
+    {"id":{"name":"GMTL_core_test_simulations","path":"scripts/GMTL_core_test_simulations/GMTL_core_test_simulations.yy",},},
     {"id":{"name":"GMTL_core_TestCase","path":"scripts/GMTL_core_TestCase/GMTL_core_TestCase.yy",},},
+    {"id":{"name":"GMTL_core_TimeSource","path":"scripts/GMTL_core_TimeSource/GMTL_core_TimeSource.yy",},},
     {"id":{"name":"GMTL_definitions","path":"scripts/GMTL_definitions/GMTL_definitions.yy",},},
     {"id":{"name":"GMTL_demo_tests","path":"scripts/GMTL_demo_tests/GMTL_demo_tests.yy",},},
     {"id":{"name":"GMTL_dependencies","path":"scripts/GMTL_dependencies/GMTL_dependencies.yy",},},
+    {"id":{"name":"GMTL_enums","path":"scripts/GMTL_enums/GMTL_enums.yy",},},
     {"id":{"name":"GMTL_init","path":"scripts/GMTL_init/GMTL_init.yy",},},
     {"id":{"name":"GMTL_internal","path":"scripts/GMTL_internal/GMTL_internal.yy",},},
     {"id":{"name":"GMTL_remove_unused_msg","path":"scripts/GMTL_remove_unused_msg/GMTL_remove_unused_msg.yy",},},

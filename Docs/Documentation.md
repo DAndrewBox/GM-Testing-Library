@@ -1,11 +1,12 @@
 # 📚 Documentation
 
-This is the official and up-to-date documentation for the **GameMaker's Testing Library**. Here you will find all the information you need to start using the library in your projects.
+This is the offline version of the official and up-to-date documentation for the **GameMaker's Testing Library**. Here you will find all the information you need to start using the library in your projects.
 
 ---
 
 ## 📖 Table of Contents
 
+- [Definitions](#definitions)
 - [Setup](#setup)
   - [suite](#suite)
   - [describe / section](#describe)
@@ -21,7 +22,7 @@ This is the official and up-to-date documentation for the **GameMaker's Testing 
   - [afterAll](#afterall)
 - [Common Matchers](#common-matchers)
   - [toBe](#tobe)
-  - [toEqual](#toequal)
+  - [toBeEqual](#tobeequal)
   - [toContain](#tocontain)
   - [toHaveLength](#tohavelength)
   - [toHaveProperty](#tohaveproperty)
@@ -50,6 +51,24 @@ This is the official and up-to-date documentation for the **GameMaker's Testing 
   - [simulateMousePosition](#simulatemouseposition)
   - [simulateFrameWait](#simulateframewait)
   - [simulateEvent](#simulateevent)
+  - [simulateTimesource](#simulatetimesource)
+  - [simulateCallLater](#simulatecalllater)
+
+---
+
+## Definitions ![](https://img.shields.io/badge/v1.1-00cbca?style=flat)
+
+> [!NOTE]
+> Definitions were added in v1.1.0 to allow users to configure the library's behavior without modifying the library's code directly. Previous versions of the library do not have this feature so this section would not apply to them.
+
+Here you will find some of the definitions that are user editable for the GameMaker's Testing Library. These are used to configure some of the library and its behavior.
+
+You can find and change these definitions in the `Libraries/GMTL/Setup/GMTL_definitions` script file inside the library. Here's the table of definitions you can edit in that file:
+
+| Name                          | Description                                      | Default Value |
+| ----------------------------- | ------------------------------------------------ | ------------- |
+| gmtl_run_at_start             | Run GMTL tests at game start.                    | true          |
+| gmtl_wait_frames_before_start | Frames to wait before start running GMTL suites. | 10            |
 
 ---
 
@@ -88,8 +107,7 @@ Sections are used to group tests together. They can contain tests but not other 
 
 `test(name, callback)` _or_ `it(name, callback)`
 
-> [!IMPORTANT]
-> `test` and `it` are the same function. You can use either of them to create a new test. They are used to create a new test inside a section. You cannot nest tests inside other tests. Tests should always be inside a section.
+> [!IMPORTANT] > `test` and `it` are the same function. You can use either of them to create a new test. They are used to create a new test inside a section. You cannot nest tests inside other tests. Tests should always be inside a section.
 
 Tests are used to test a specific piece of code. They should be small and focused on a single aspect of your code. You can put a test in any section and it is recommended to have multiple tests per section to test different parts of your code.
 
@@ -260,13 +278,13 @@ Here you will find all the matchers you can use after the `expect` function to m
 
 `toBe(expected)`
 
-The `toBe` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays, but not structs. For structs, you can use the `toEqual` matcher.
+The `toBe` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays, but not structs. For structs, you can use the `toBeEqual` matcher.
 
-### toEqual
+### toBeEqual
 
-`toEqual(expected)`
+`toBeEqual(expected)`
 
-The `toEqual` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays and structs.
+The `toBeEqual` matcher is used to compare the actual value with the expected value using the `==` operator. This matcher will check if the actual value is the same as the expected value. It will throw an error if they are not the same. This matcher is used to compare primitive values like numbers, strings, ref index, and booleans, and can accept arrays and structs.
 
 ### toContain
 
@@ -385,7 +403,7 @@ The `create` function is used to create an instance of an object at a specific p
 Example:
 
 ```gml
-suite("Mfunction() {
+suite(function() {
   section("My Section", function() {
     test("My Test", function() {
       var _obj = create(0, 0, obj_player);
@@ -461,7 +479,7 @@ The `simulateMousePosition` function is used to simulate a mouse position event.
 `simulateFrameWait([frames])`
 
 > [!IMPORTANT]
-> This function simulates frames passing by executing the step events of the objects, the frames are not actually rendered by GameMaker.
+> This function simulates frames passing by executing timesources/call_later, the step events of the objects, the frames are not actually rendered by GameMaker.
 
 The `simulateFrameWait` function is used to simulate a frame wait event. This function will wait for the specified number of virtual frames before continuing. You can pass an optional number of frames to the function to wait for a specific number of frames. If no frames are specified, it will wait for one frame.
 
@@ -470,3 +488,24 @@ The `simulateFrameWait` function is used to simulate a frame wait event. This fu
 `simulateEvent(event_type, event_number, [instance_id])`
 
 The `simulateEvent` function is used to simulate an event for an object. This function will simulate an event for the specified object. You can pass an object id, an event id, and an optional instance id to the function to simulate an event for the specified object. The event type and number should be theones described in the manual like `ev_create`, `ev_step`, etc. The instance id should be an instance id, if no instance id is specified, it will simulate the event for all instances currently active.
+
+### simulateTimesource ![](https://img.shields.io/badge/v1.1-00cbca?style=flat)
+
+`simulateTimesource(parent, period, unit, callback, [args], [repetitions], [expiry])`
+
+The `simulateTimesource` function is used to simulate a [timesource](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/Time_Sources.htm). This function takes the exact same parameters than a GameMaker native timesource, but it will not actually create a timesource, it will just virtually simulate the event. This is useful when you want to test pseudo-async events like a custom garbage collector or waiting some frames for an event to happen.
+
+This function creates a constructor that will be used to simulate the timesource and has 2 methods to call for it to work: `.start()` that mimics the behaviour of [time_source_start()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/time_source_start.htm), and `.stop()` that mimics the behaviour of [time_source_stop()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/time_source_stop.htm).
+
+**If you want to strictly call the GameMaker's built-in functions you can use `original_time_source_create()`, `original_time_source_start()`, etc**
+
+### simulateCallLater ![](https://img.shields.io/badge/v1.1-00cbca?style=flat)
+
+> [!NOTE]
+> Since the original GameMaker's `call_later()` function works behind the scenes with a timesource, this function is basically a wrapper for the `simulateTimesource` function too.
+
+`simulateCallLater(callback, [args], [repetitions], [loop])`
+
+The `simulateCallLater` function is used to simulate a [call_later()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/call_later.htm) event. This function will simulate a call later event for the specified callback. You can pass a callback, an optional array of arguments, an optional number of repetitions, and an optional loop flag to the function to simulate a call later event. The callback will be called after the specified number of frames.
+
+**If you want to strictly call the GameMaker's built-in function you can use `original_call_later()` directly in your code.**
