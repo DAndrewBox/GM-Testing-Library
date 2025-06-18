@@ -13,7 +13,7 @@
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2023.4+-039e5c?logo=gamemaker&labelColor=000)
 ![GameMaker](https://img.shields.io/badge/GameMaker-v2024-039e5c?logo=gamemaker&labelColor=000)
 
-### 📅 Last updated: 2025-06-10
+### 📅 Last updated: 2025-06-17
 
 ---
 
