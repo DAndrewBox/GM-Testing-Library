@@ -1,6 +1,6 @@
 /// @func	__gmtl_dep_fn_string_percentage()
-/// @param	{real}	current_value
-/// @param	{real}	100%_value
+/// @param	{Real}	current_value
+/// @param	{Real}	100%_value
 /// @ignore
 function __gmtl_dep_fn_string_percentage(_val, _max) {	
 	static percentage = function (_val, _max) {
@@ -15,9 +15,9 @@ function __gmtl_dep_fn_string_percentage(_val, _max) {
 }
 
 /// @func	__gmtl_dep_fn_string_pad_right(string, char, size)
-/// @param	{string}	string
-/// @param	{string}	char
-/// @param	{real}		size
+/// @param	{String}	string
+/// @param	{String}	char
+/// @param	{Real}		size
 /// @ignore
 function __gmtl_dep_fn_string_pad_right(_str, _char, _size) {
 	if (_char == "") return _str;

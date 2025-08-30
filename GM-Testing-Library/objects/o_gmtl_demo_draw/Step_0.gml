@@ -1,4 +1,4 @@
-if (gmtl_has_finished && !gmtl_internal.initializing && log == "") {
+if (gmtl_has_finished && !gmtl_is_initializing && log == "") {
 	log = string_replace_all(gmtl_log, "\t", "  ");
 	log_lines = string_split(log, "\n", false);
 	
