@@ -374,8 +374,8 @@ function __gmtl_internal_fn_call_suite(_suite) {
 		_suite();
 		if (gmtl_suite_last_failed) {
 			/*throw {
-				message: $"Suite Failed on file {_GMFILE_}. Function \"{_Function_}\" (line {_GMLINE_}).",
-				longMessage: $"Suite Failed on file {_GMFILE_}. Function \"{_Function_}\" (line {_GMLINE_}).",
+				message: $"Suite Failed on file {_GMFILE_}. Function \"{_GMFUNCTION_}\" (line {_GMLINE_}).",
+				longMessage: $"Suite Failed on file {_GMFILE_}. Function \"{_GMFUNCTION_}\" (line {_GMLINE_}).",
 			};*/
 			throw {
 				message: "",
