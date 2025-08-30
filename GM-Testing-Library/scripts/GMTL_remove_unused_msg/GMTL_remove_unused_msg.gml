@@ -1,3 +1,4 @@
+/// Feather ignore GM2047
 /// @ignore
 function __gmtl_internal_remove_syntax_errors() {
 	if (false) {
@@ -69,3 +70,4 @@ function __gmtl_internal_remove_syntax_errors() {
 		#endregion
 	}
 }
+/// Feather restore GM2047

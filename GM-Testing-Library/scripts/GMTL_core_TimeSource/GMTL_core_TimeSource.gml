@@ -1,11 +1,11 @@
 ///	@func	GMTL_TimeSource(parent, period, units, callback, args, repetitions, expiryType)
-///	@param	{GMTimeSourceParent}	parent
-///	@param	{real}					period
-///	@param	{GMTimeSourceUnit}		units
-///	@param	{GMFunction}			callback
-///	@param	{array}					args
-///	@param	{real}					reps
-///	@param	{GMTimeSourceExpiry}	expiryType
+///	@param	{Any}							parent
+///	@param	{Real}							period
+///	@param	{Constant.TimeSourceUnits}		units
+///	@param	{Function}						callback
+///	@param	{Array}							args
+///	@param	{Real}							reps
+///	@param	{Constant.TimeSourceExpiryType}	expiryType
 function GMTL_TimeSource(_parent, _period, _units, _callback, _args = [], _reps = 1, _expiry = undefined) constructor {
 	__internal_id = current_time;
 	/* Time to execute the callback */
@@ -31,7 +31,7 @@ function GMTL_TimeSource(_parent, _period, _units, _callback, _args = [], _reps 
 	}
 	
 	/// @func	startLater(frames)
-	/// @param	{real}	frames
+	/// @param	{Real}	frames
 	/// @desc	Starts the frame check after a defined set of frames. Adds a delay to the start()
 	/// @ignore
 	function startLater(_frames) {

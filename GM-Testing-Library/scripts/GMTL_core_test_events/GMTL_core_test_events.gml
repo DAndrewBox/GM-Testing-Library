@@ -1,6 +1,6 @@
 /// @func	expect(value, args)
-/// @param	{any}	value
-/// @param	{array}	args
+/// @param	{Any}	value
+/// @param	{Array}	args
 function expect(_val, _args = []) {
 	if (gmtl_suite_continue) {
 		return new TestCase(_val, _args);
@@ -8,10 +8,10 @@ function expect(_val, _args = []) {
 }
 
 /// @func	create(x, y, object_index, params)
-/// @param	{real}		x
-/// @param	{real}		y
-/// @param	{ref}		object_index
-/// @param	{struct}	params
+/// @param	{Real}				x
+/// @param	{Real}				y
+/// @param	{Asset.GMObject}	object_index
+/// @param	{Struct}			params
 function create(_x, _y, _obj, _params = {}) {
 	if (gmtl_suite_continue) {
 		static _layer_name = "__GMTL_LAYER_TESTING";
@@ -26,28 +26,28 @@ function create(_x, _y, _obj, _params = {}) {
 }
 
 /// @func	beforeAll(fn)
-/// @param	{GMFunction}	fn
+/// @param	{Function | Asset.GMScript}	fn
 function beforeAll(_fn) {
 	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_before_all = _fn;
 }
 
 /// @func	afterAll(fn)
-/// @param	{GMFunction}	fn
+/// @param	{Function | Asset.GMScript}	fn
 function afterAll(_fn) {
 	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_after_all = _fn;
 }
 
 /// @func	beforeEach(fn)
-/// @param	{GMFunction}	fn
+/// @param	{Function | Asset.GMScript}	fn
 function beforeEach(_fn) {
 	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_before_each = _fn;
 }
 
 /// @func	afterEach(fn)
-/// @param	{GMFunction}	fn
+/// @param	{Function | Asset.GMScript}	fn
 function afterEach(_fn) {
 	_fn = __gmtl_internal_fn_get_fn_index(_fn);
 	gmtl_test_after_each = _fn;

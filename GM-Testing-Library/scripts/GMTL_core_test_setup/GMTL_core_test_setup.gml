@@ -1,12 +1,12 @@
 /// @func	suite(fn)
-/// @param	{GMFunction}	fn
+/// @param	{Function}	fn
 function suite(_suite) {
 	__gmtl_internal_fn_suite_add_to_queue(_suite);
 }
 
 /// @func	describe(name, fn)
-/// @param	{string}	name
-/// @param	{GMFunction}	fn
+/// @param	{String}	name
+/// @param	{Function}	fn
 function describe(_name, _fn) {
 	gmtl_indent_offset++;
 	gmtl_suite_continue = true;
@@ -46,9 +46,9 @@ function describe(_name, _fn) {
 }
 
 /// @func	it(name, fn, args)
-/// @param	{string}		name
-/// @param	{GMFunction}	fn
-/// @param	{array}		args
+/// @param	{String}		name
+/// @param	{Function}	fn
+/// @param	{Array}		args
 function it(_name, _fn, _args = []) {
 	gmtl_test_status = __gmtl_test_status.RUN;
 	gmtl_indent = 1;
@@ -130,24 +130,24 @@ function it(_name, _fn, _args = []) {
 }
 
 /// @func	section(name, fn)
-/// @param	{string}		name
-/// @param	{GMFunction}	fn
+/// @param	{String}		name
+/// @param	{Function}	fn
 function section(_name, _fn) {
 	describe(_name, _fn);
 }
 
 /// @func	test(name, fn, args)
-/// @param	{string}		name
-/// @param	{GMFunction}	fn
-/// @param	{array}			args
+/// @param	{String}		name
+/// @param	{Function}	fn
+/// @param	{Array}			args
 function test(_name, _fn, _args = []) {
 	it(_name, _fn, _args);
 }
 
 /// @func	skip(name, fn, args)
-/// @param	{string}		name
-/// @param	{GMFunction}	fn
-/// @param	{array}			args
+/// @param	{String}		name
+/// @param	{Function}	fn
+/// @param	{Array}			args
 function skip(_name, _fn, _args = []) {
 	gmtl_test_status = __gmtl_test_status.SKIP;
 	gmtl_indent = 1;
@@ -160,9 +160,9 @@ function skip(_name, _fn, _args = []) {
 }
 
 /// @func	each(name, fn, cases)
-/// @param	{string}		name
-/// @param	{GMFunction}	fn
-/// @param	{array}			cases
+/// @param	{String}		name
+/// @param	{Function}	fn
+/// @param	{Array}			cases
 function each(_name, _fn, _cases) {
 	var _cases_len = array_length(_cases);
 	var _name_with_params;

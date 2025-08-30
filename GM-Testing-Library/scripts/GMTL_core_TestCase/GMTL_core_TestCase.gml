@@ -1,6 +1,6 @@
 /// @func	TestCase(value)
-/// @param	{any}	value
-/// @param	{array}	args
+/// @param	{Any}	value
+/// @param	{Array}	args
 function TestCase(_val, _args) constructor {
 	__internal_value = _val;
 	__internal_args = _args;
@@ -18,7 +18,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toBe(expected_result)
-	/// @param	{any}	expected_result
+	/// @param	{Any}	expected_result
 	function toBe(_expectedResult) {
 		var _isValid;
 		if (is_array(__internal_value) && is_array(_expectedResult)) {
@@ -42,7 +42,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toBeEqual(expected_result)
-	/// @param	{any}	expected_result
+	/// @param	{Any}	expected_result
 	function toBeEqual(_expectedResult) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -97,7 +97,7 @@ function TestCase(_val, _args) constructor {
 		if (!_isValid) {
 			__gmtl_internal_fn_stacktrace();
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toHaveReturned():");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? true : $"{__not_str_expected} {true}"}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? "true" : $"{__not_str_expected} true"}");
 			array_push(gmtl_test_log, $"- Received Result: {__internal_value}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
@@ -107,7 +107,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toHaveReturnedWith(expected_result)
-	/// @param	{any}	expected_result
+	/// @param	{Any}	expected_result
 	function toHaveReturnedWith(_expectedResult) {
 		var _isValid = !is_undefined(__internal_value) && is_callable(__internal_value);
 		
@@ -139,7 +139,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toHaveLength(number)
-	/// @param	{real}	number
+	/// @param	{Real}	number
 	function toHaveLength(_n) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -167,7 +167,7 @@ function TestCase(_val, _args) constructor {
 			var _type_of_msg = $"<Invalid Type: {_typeOf}>";
 			_type_of_msg = (_typeInvalid ? _type_of_msg  : string(_len));
 			array_push(gmtl_test_log, $">expect({__internal_value}){__not_str_method}.toHaveLength({_n}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _n : $"{__not_str_expected} {_n}"}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? string(_n) : $"{__not_str_expected} {_n}"}");
 			array_push(gmtl_test_log, $"- Received Result: {_type_of_msg}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
@@ -177,8 +177,8 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toHaveProperty(key, value)
-	/// @param	{string}	key
-	/// @param	{any}	value
+	/// @param	{String}	key
+	/// @param	{Any}	value
 	function toHaveProperty(_key, _value = undefined) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -238,7 +238,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toBeGreaterThan(number)
-	/// @param	{real}	number
+	/// @param	{Real}	number
 	function toBeGreaterThan(_n) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -273,7 +273,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toBeGreaterThanOrEqual(number)
-	/// @param	{real}	number
+	/// @param	{Real}	number
 	function toBeGreaterThanOrEqual(_n) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -306,7 +306,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toBeLessThan(number)
-	/// @param	{real}	number
+	/// @param	{Real}	number
 	function toBeLessThan(_n) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -339,7 +339,7 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toBeLessThanOrEqual(number)
-	/// @param	{real}	number
+	/// @param	{Real}	number
 	function toBeLessThanOrEqual(_n) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
@@ -392,8 +392,8 @@ function TestCase(_val, _args) constructor {
 			__gmtl_internal_fn_stacktrace();
 			
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toBeFalsy():");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? false : $"{__not_str_expected} {false}"}");
-			array_push(gmtl_test_log, $"- Received Result: {true}");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? "false" : $"{__not_str_expected} false"}");
+			array_push(gmtl_test_log, $"- Received Result: true");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {
@@ -432,16 +432,17 @@ function TestCase(_val, _args) constructor {
 	}
 	
 	/// @func toContain(value)
-	/// @param	{any}	value
+	/// @param	{Any}	value
 	function toContain(_value) {
 		var _typeOf	 = typeof(__internal_value);
 		var _isValid = false;
 		var _typeInvalid = false;
 		var _onPos	 = -1;
+		var _arr_len = 0;
 		
 		switch (_typeOf) {
 			case "array":
-				var _arr_len = array_length(__internal_value);
+				_arr_len = array_length(__internal_value);
 				_onPos = -1;
 				
 				for (var i = 0; i < _arr_len; i++) {
@@ -454,7 +455,7 @@ function TestCase(_val, _args) constructor {
 				break;
 			case "struct":
 				var _keys = struct_get_names(__internal_value);
-				var _arr_len = array_length(_keys);
+				_arr_len = array_length(_keys);
 				_onPos = "";
 				
 				for (var i = 0; i < _arr_len; i++) {

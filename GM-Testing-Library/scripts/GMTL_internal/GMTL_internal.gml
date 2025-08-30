@@ -1,5 +1,5 @@
 /// @func	__gmtl_internal_fn_log(message)
-/// @param	{string}	message
+/// @param	{String}	message
 /// @ignore
 function __gmtl_internal_fn_log(_msg) {
 	var _pad_left = "";
@@ -12,29 +12,30 @@ function __gmtl_internal_fn_log(_msg) {
 }
 
 /// @func	__gmtl_internal_fn_log_test_success(message, time)
-/// @param	{string}	message
-/// @param	{real}	time
+/// @param	{String}	message
+/// @param	{Real}	time
 /// @ignore
 function __gmtl_internal_fn_log_test_success(_msg, _time) {
 	__gmtl_internal_fn_log($"├── ✔ {_msg} ({_time / 1000}ms)");
 }
 
 /// @func	__gmtl_internal_fn_log_test_failed(message, time)
-/// @param	{string}	message
-/// @param	{real}	time
+/// @param	{String}	message
+/// @param	{Real}	time
 /// @ignore
 function __gmtl_internal_fn_log_test_failed(_msg, _time) {
 	__gmtl_internal_fn_log($"├── ❌ {_msg} ({_time / 1000}ms)");
 }
 
 /// @func	__gmtl_internal_fn_log_test_skipped(message)
-/// @param	{string}	message
+/// @param	{String}	message
 /// @ignore
 function __gmtl_internal_fn_log_test_skipped(_msg) {
 	__gmtl_internal_fn_log($"├── ⚠ (Skipped) {_msg}");
 }
 
 /// @func	__gmtl_internal_fn_has_finished()
+/// @ignore
 function __gmtl_internal_fn_has_finished() {
 	if (!variable_global_exists("__gmtl_internal")) {
 		__gmtl_setup();
@@ -43,8 +44,19 @@ function __gmtl_internal_fn_has_finished() {
 	return gmtl_internal.finished;
 }
 
+/// @func	__gmtl_internal_fn_is_initializing()
+/// @ignore
+function __gmtl_internal_fn_is_initializing() {
+	if (!variable_global_exists("__gmtl_internal")) {
+		__gmtl_setup();
+	}
+	
+	return gmtl_internal.initializing;
+}
+
+
 /// @func	__gmtl_internal_fn_suite_add_to_queue(suite)
-/// @param	{GMFunction}	suite
+/// @param	{Function}	suite
 /// @ignore
 function __gmtl_internal_fn_suite_add_to_queue(_suite) {
 	var _ts = time_source_create(time_source_game, 2, time_source_units_frames, function(_suite) {
@@ -55,9 +67,9 @@ function __gmtl_internal_fn_suite_add_to_queue(_suite) {
 }
 
 /// @func	__gmtl_internal_fn_wait_for(instance, time, unit)
-/// @param	{ref}	instance
-/// @param	{real}	time
-/// @param	{real}	unit
+/// @param	{Id.Instance | Constant.All}	instance
+/// @param	{Real}							time
+/// @param	{Real}							unit
 /// @ignore
 function __gmtl_internal_fn_wait_for(_inst, _t, _unit) {
 	_t = (_unit == time_source_units_seconds ? _t * game_get_speed(gamespeed_fps) : _t);
@@ -84,6 +96,7 @@ function __gmtl_internal_fn_wait_for(_inst, _t, _unit) {
 				alarm[i] -= 1;
 			}
 		}
+		
 		_count++;
 	}
 	
@@ -111,52 +124,72 @@ function __gmtl_internal_fn_stacktrace() {
 }
 
 /// @func	__gmtl_internal_fn_keyboard_check(button)
-/// @param	{real}	button
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_keyboard_check(_btn) {
-	return original_keyboard_check(_btn) || gmtl_internal.keys[$ _btn];
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
+		return gmtl_internal.keys[$ _btn];
+	}
+	
+	return original_keyboard_check(_btn);
 }
 
 /// @func	__gmtl_internal_fn_keyboard_check_pressed(button)
-/// @param	{real}	button
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_keyboard_check_pressed(_btn) {
-	return original_keyboard_check_pressed(_btn) || gmtl_internal.keys[$ _btn];
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
+		return gmtl_internal.keys[$ _btn];
+	}
+	
+	return original_keyboard_check_pressed(_btn);
 }
 
 /// @func	__gmtl_internal_fn_keyboard_check_released(button)
-/// @param	{real}	button
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_keyboard_check_released(_btn) {
-	return original_keyboard_check_released(_btn) || !gmtl_internal.keys[$ _btn];
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
+		return (struct_exists(gmtl_internal.keys, string(_btn)) && !gmtl_internal.keys[$ _btn]);
+	}
+	
+	return original_keyboard_check_released(_btn); 
+}
+
+/// @func	__gmtl_internal_fn_keyboard_clear(button)
+/// @param	{Real}	button
+/// @ignore
+function __gmtl_internal_fn_keyboard_clear(_btn) {
+	original_keyboard_clear(_btn);
+	delete gmtl_internal.keys[$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check(device, button)
-/// @param	{real}	device
-/// @param	{real}	button
+/// @param	{Real}	device
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_gamepad_button_check(_device, _btn) {
 	return original_gamepad_button_check(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check_pressed(device, button)
-/// @param	{real}	device
-/// @param	{real}	button
+/// @param	{Real}	device
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_gamepad_button_check_pressed(_device, _btn) {
 	return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check_released(device, button)
-/// @param	{real}	device
-/// @param	{real}	button
+/// @param	{Real}	device
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_gamepad_button_check_released(_device, _btn) {
 	return original_gamepad_button_check_released(_device, _btn) || !gmtl_internal.gamepad[_device][$ _btn];
 }
 
 /// @func	__gmtl_internal_fn_mouse_button_to_map(button)
-/// @param	{real}		button
+/// @param	{Real}		button
 /// @ignore
 function __gmtl_internal_fn_mouse_button_to_map(_btn) {
 	switch (_btn) {
@@ -171,7 +204,7 @@ function __gmtl_internal_fn_mouse_button_to_map(_btn) {
 
 /// @func	__gmtl_internal_fn_mouse_check_anykey(expected, state)
 /// @param	{bool}		expected
-/// @param	{string}	state
+/// @param	{String}	state
 /// @ignore
 function __gmtl_internal_fn_mouse_check_anykey(_expected, _state) {
 	static _keys = struct_get_names(gmtl_internal.mouse);
@@ -188,63 +221,64 @@ function __gmtl_internal_fn_mouse_check_anykey(_expected, _state) {
 }
 
 /// @func	__gmtl_internal_fn_mouse_check_button(button)
-/// @param	{real}	button
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_mouse_check_button(_btn) {
-	if (original_mouse_check_button(_btn)) {
-		return true;
-	}
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
+		if (_btn == mb_any) {
+			return __gmtl_internal_fn_mouse_check_anykey(true, "hold") || __gmtl_internal_fn_mouse_check_anykey(true, "press");
+		}
 	
-	if (_btn == mb_any) {
-		return __gmtl_internal_fn_mouse_check_anykey(true, "hold") || __gmtl_internal_fn_mouse_check_anykey(true, "press");
-	}
+		if (_btn == mb_none) {
+			return __gmtl_internal_fn_mouse_check_anykey(false, "hold") || __gmtl_internal_fn_mouse_check_anykey(false, "press")
+		}
 	
-	if (_btn == mb_none) {
-		return __gmtl_internal_fn_mouse_check_anykey(false, "hold") || __gmtl_internal_fn_mouse_check_anykey(false, "press")
-	}
+		var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
+		return  gmtl_internal.mouse[$ _key].hold || gmtl_internal.mouse[$ _key].press;
 	
-	var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
-	return  gmtl_internal.mouse[$ _key].hold || gmtl_internal.mouse[$ _key].press;
+	}
+
+	return original_mouse_check_button(_btn);
 }
 
 /// @func	__gmtl_internal_fn_mouse_check_button_pressed(button)
-/// @param	{real}	button
+/// @param	{Real}	button
 /// @ignore
-function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {
-	if (original_mouse_check_button_pressed(_btn)) {
-		return true;
+function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {	
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
+		if (_btn == mb_any) {
+			return __gmtl_internal_fn_mouse_check_anykey(true, "press");
+		}
+	
+		if (_btn == mb_none) {
+			return __gmtl_internal_fn_mouse_check_anykey(false, "press");
+		}
+	
+		var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
+		return gmtl_internal.mouse[$ _key].press;
 	}
 	
-	if (_btn == mb_any) {
-		return __gmtl_internal_fn_mouse_check_anykey(true, "press");
-	}
-	
-	if (_btn == mb_none) {
-		return __gmtl_internal_fn_mouse_check_anykey(false, "press");
-	}
-	
-	var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
-	return gmtl_internal.mouse[$ _key].press;
+	return original_mouse_check_button_pressed(_btn);
 }
 
 /// @func	__gmtl_internal_fn_mouse_check_button_released(button)
-/// @param	{real}	button
+/// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_mouse_check_button_released(_btn) {
-	if (original_mouse_check_button_released(_btn)) {
-		return true;
-	}
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
+		if (_btn == mb_any) {
+			return __gmtl_internal_fn_mouse_check_anykey(true, "release");
+		}
 	
-	if (_btn == mb_any) {
-		return __gmtl_internal_fn_mouse_check_anykey(true, "release");
-	}
+		if (_btn == mb_none) {
+			return __gmtl_internal_fn_mouse_check_anykey(false, "release");
+		}
 	
-	if (_btn == mb_none) {
-		return __gmtl_internal_fn_mouse_check_anykey(false, "release");
+		var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
+		return gmtl_internal.mouse[$ _key].release;
 	}
-	
-	var _key = __gmtl_internal_fn_mouse_button_to_map(_btn);
-	return gmtl_internal.mouse[$ _key].release;
+
+	return original_mouse_check_button_released(_btn);	
 }
 
 /// @func	__gmtl_internal_fn_mouse_reset()
@@ -290,8 +324,34 @@ function __gmtl_internal_fn_mouse_get_y() {
 	return gmtl_internal.mouse.y;
 }
 
+/// @func	__gmtl_internal_fn_io_clear()
+/// @ignore
+function __gmtl_internal_fn_io_clear() {
+	original_io_clear();
+	
+	// Clear all io's
+	delete gmtl_internal.keys;
+	delete gmtl_internal.mouse;
+	delete gmtl_internal.gamepad;
+	
+	// Re-generate io's
+	gmtl_internal.keys = {};
+	gmtl_internal.mouse = {
+		left:	new GTML_MouseState(),
+		right:	new GTML_MouseState(),
+		middle:	new GTML_MouseState(),
+		side1:	new GTML_MouseState(),
+		side2:	new GTML_MouseState(),
+		x:		0,
+		y:		0,
+	};
+	gmtl_internal.gamepad = array_create_ext(8, function() {
+		return {}
+	});
+}
+
 /// @func	__gmtl_internal_fn_get_fn_index(fn)
-/// @param	{GMFunction}	fn
+/// @param	{Function}	fn
 /// @ignore
 function __gmtl_internal_fn_get_fn_index(_fn) {
 	var _fn_to_run = -1;
@@ -305,7 +365,7 @@ function __gmtl_internal_fn_get_fn_index(_fn) {
 }
 
 /// @func	__gmtl_internal_fn_call_suite(suite)
-/// @param	{GMFunction}	suite
+/// @param	{Function}	suite
 /// @ignore
 function __gmtl_internal_fn_call_suite(_suite) {
 	gmtl_suite_last_failed = false;
@@ -334,7 +394,7 @@ function __gmtl_internal_fn_call_suite(_suite) {
 }
 
 /// @func	__gmtl_internal_fn_finish_suites(time_start)
-/// @param	{real}	time_start
+/// @param	{Real}	time_start
 /// @ignore
 function __gmtl_internal_fn_finish_suites(_t_start) {
 	var _failed, _skipped, _time, _success_rate;
@@ -479,33 +539,33 @@ function __gmtl_internal_fn_show_coverage_table() {
 }
 
 /// @func	__gmtl_internal_fn_set_key_state(key, press)
-/// @param	{real}		key
-/// @param	{boolean}	press
+/// @param	{Real}	key
+/// @param	{Bool}	press
 /// @ignore
 function __gmtl_internal_fn_set_key_state(_key, _press) {
 	gmtl_internal.keys[$ _key] = _press;
 }
 
 /// @func	__gmtl_internal_fn_set_gamepad_button_state(device, button, press)
-/// @param	{real}		device
-/// @param	{real}		button
-/// @param	{boolean}	press
+/// @param	{Real}	device
+/// @param	{Real}	button
+/// @param	{Bool}	press
 /// @ignore
 function __gmtl_internal_fn_set_gamepad_button_state(_device, _btn, _press) {
 	gmtl_internal.gamepad[_device][$ _btn] = _press;
 }
 
 ///	@func	__gmtl_internal_fn_time_source_create(parent, period, units, callback, args, repetitions, expiryType)
-///	@param	{GMTimeSourceParent}	parent
-///	@param	{real}					period
-///	@param	{GMTimeSourceUnit}		units
-///	@param	{GMFunction}			callback
-///	@param	{array}					args
-///	@param	{real}					reps
-///	@param	{GMTimeSourceExpiry}	expiryType
+///	@param	{Any}							parent
+///	@param	{Real}							period
+///	@param	{Constant.TimeSourceUnits}		units
+///	@param	{Function}						callback
+///	@param	{Array}							args
+///	@param	{Real}							reps
+///	@param	{Constant.TimeSourceExpiryType}	expiryType
 /// @ignore
 function __gmtl_internal_fn_time_source_create(_parent, _period, _units, _cb, _args = [], _reps = 1, _expiry = time_source_expire_nearest) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		var _ts = simulateTimeSource(_parent, _period, _units, _cb, _args, _reps, _expiry);
 		return _ts;
 	}
@@ -513,10 +573,10 @@ function __gmtl_internal_fn_time_source_create(_parent, _period, _units, _cb, _a
 }
 
 ///	@func	__gmtl_internal_fn_time_source_start(id)
-///	@param	{GMTimeSource}	id
+///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_start(_ts) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		_ts.start();
 		return;
 	}	
@@ -524,10 +584,10 @@ function __gmtl_internal_fn_time_source_start(_ts) {
 }
 
 ///	@func	__gmtl_internal_fn_time_source_stop(id)
-///	@param	{GMTimeSource}	id
+///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_stop(_ts) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		_ts.stop();	
 		return;
 	}
@@ -535,10 +595,10 @@ function __gmtl_internal_fn_time_source_stop(_ts) {
 }
 
 ///	@func	__gmtl_internal_fn_time_source_pause(id)
-///	@param	{GMTimeSource}	id
+///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_pause(_ts) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		_ts.pause();
 		return;
 	}
@@ -546,10 +606,10 @@ function __gmtl_internal_fn_time_source_pause(_ts) {
 }
 
 ///	@func	__gmtl_internal_fn_time_source_resume(id)
-///	@param	{GMTimeSource}	id
+///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_resume(_ts) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		_ts.resume();
 		return;
 	}
@@ -557,10 +617,10 @@ function __gmtl_internal_fn_time_source_resume(_ts) {
 }
 
 ///	@func	__gmtl_internal_fn_time_source_destroy(id)
-///	@param	{GMTimeSource}	id
+///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_destroy(_ts) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		var _all_ts_len = array_length(gmtl_timesources);
 		for (var i = 0; i < _all_ts_len; i++) {
 			if (is_struct(gmtl_timesources[i]) && gmtl_timesources[i].__internal_id == _ts.__internal_id) {
@@ -578,13 +638,13 @@ function __gmtl_internal_fn_time_source_destroy(_ts) {
 }
 
 ///	@func	__gmtl_internal_fn_call_later(period, units, callback, loop)
-///	@param	{real}					period
-///	@param	{GMTimeSourceUnit}		units
-///	@param	{GMFunction}			callback
-///	@param	{boolean				loop
+///	@param	{Real}						period
+///	@param	{Constant.TimeSourceUnits}	units
+///	@param	{Function}					callback
+///	@param	{Bool}						loop
 /// @ignore
 function __gmtl_internal_fn_call_later(_period, _units, _cb, _loop = false) {
-	if (!gmtl_has_finished && !gmtl_internal.initializing) {
+	if (!gmtl_has_finished && !gmtl_is_initializing) {
 		var _ts = simulateCallLater(_period, _units, _cb, _loop);
 		return _ts;
 	}

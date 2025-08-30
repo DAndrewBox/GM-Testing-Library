@@ -1,7 +1,7 @@
 /*
 	GameMaker Testing Library
-	Version: v1.1.0
-	Release date: 2025-06-10
+	Version: v1.1.1
+	Release date: 2025-08-30
 	Author:	DAndrëwBox
 	https://github.com/DAndrewBox/GM-Testing-Library
 */
