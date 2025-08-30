@@ -70,4 +70,4 @@ function __gmtl_internal_remove_syntax_errors() {
 		#endregion
 	}
 }
-/// Feather restore GM2047
+/// Feather enable GM2047

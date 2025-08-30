@@ -332,7 +332,6 @@ function __gmtl_internal_fn_io_clear() {
 	// Clear all io's
 	delete gmtl_internal.keys;
 	delete gmtl_internal.mouse;
-	delete gmtl_internal.gamepad;
 	
 	// Re-generate io's
 	gmtl_internal.keys = {};

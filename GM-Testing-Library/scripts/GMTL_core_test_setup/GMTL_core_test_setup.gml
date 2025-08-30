@@ -15,6 +15,7 @@ function describe(_name, _fn) {
 
 	try {
 		if (is_callable(gmtl_test_before_all)) {
+			// Feather ignore once GM1041 - Since `is_callable` is used to validate, this is always a Function.
 			script_execute(gmtl_test_before_all);
 		}
 		
@@ -22,6 +23,7 @@ function describe(_name, _fn) {
 		__gmtl_internal_fn_log("");
 		
 		if (is_callable(gmtl_test_after_all)) {
+			// Feather ignore once GM1041 - Since `is_callable` is used to validate, this is always a Function.
 			script_execute(gmtl_test_after_all);
 		}
 	} catch(e) {
@@ -67,6 +69,7 @@ function it(_name, _fn, _args = []) {
 	var _time = get_timer();
 	try {
 		if (is_callable(gmtl_test_before_each)) {
+			// Feather ignore once GM1041 - Since `is_callable` is used to validate, this is always a Function.
 			script_execute(gmtl_test_before_each);
 		}
 		
@@ -121,6 +124,7 @@ function it(_name, _fn, _args = []) {
 		
 		// Executes the afterEach() events
 		if (is_callable(gmtl_test_after_each)) {
+			// Feather ignore once GM1041 - Since `is_callable` is used to validate, this is always a Function.
 			script_execute(gmtl_test_after_each);
 		}
 		
