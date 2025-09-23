@@ -1,7 +1,7 @@
 /*
 	GameMaker Testing Library
-	Version: v1.1.1
-	Release date: 2025-08-30
+	Version: v1.1.1c
+	Release date: 2025-09-23
 	Author:	DAndrëwBox
 	https://github.com/DAndrewBox/GM-Testing-Library
 */
@@ -81,7 +81,10 @@ function __gmtl_init() {
 	gmtl_internal.initializing = false;
 
 	// Skip all tests
-	if (!gmtl_run_at_start) return;
+	if (!gmtl_run_at_start) {
+		gmtl_internal.finished = true;
+		return;
+	}
 
 	// Run all tests a few frames after project start.
 	original_call_later(gmtl_wait_frames_before_start, time_source_units_frames, function() {
