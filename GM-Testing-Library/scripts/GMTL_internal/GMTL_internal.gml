@@ -298,11 +298,12 @@ function __gmtl_internal_fn_mouse_reset() {
 /// @ignore
 function __gmtl_internal_fn_mouse_get_x() {
 	if (gmtl_has_finished) {
+		var _x_camera = camera_get_view_x(view_camera[view_current]);
 		var _w_camera = camera_get_view_width(view_camera[view_current]);
 		var _w_window = window_get_width(); 
 		var _x = (display_mouse_get_x() - window_get_x()) * (1 / _w_window);
 		_x = clamp(_x, 0, 1);
-		_x = _x * _w_camera;
+		_x = _x * _w_camera + _x_camera;
 		return floor(_x);
 	}
 	
@@ -313,11 +314,12 @@ function __gmtl_internal_fn_mouse_get_x() {
 /// @ignore
 function __gmtl_internal_fn_mouse_get_y() {
 	if (gmtl_has_finished) {
+		var _y_camera = camera_get_view_y(view_camera[view_current]);
 		var _h_camera = camera_get_view_height(view_camera[view_current]);
 		var _h_window = window_get_height(); 
 		var _y = (display_mouse_get_y() - window_get_y()) * (1 / _h_window);
 		_y = clamp(_y, 0, 1);
-		_y = _y * _h_camera;
+		_y = _y * _h_camera + _y_camera;
 		return floor(_y);
 	}
 	
