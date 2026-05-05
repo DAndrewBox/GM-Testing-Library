@@ -4,6 +4,18 @@
 function TestCase(_val, _args) constructor {
 	__internal_value = _val;
 	__internal_args = _args;
+
+	// Mark coverage when a named function is passed to expect()
+	if (gmtl_show_coverage && is_callable(_val)) {
+		var _fn_name = "";
+		var _idx = is_method(_val) ? method_get_index(_val) : _val;
+		if (is_real(_idx) && script_exists(_idx)) {
+			_fn_name = script_get_name(_idx);
+		}
+		if (_fn_name != "" && _fn_name != "<undefined>" && string_pos("anon@", _fn_name) == 0) {
+			__gmtl_internal_fn_coverage_mark(_fn_name);
+		}
+	}
 	
 	__not = false;
 	__not_str_method = "";
@@ -462,9 +474,11 @@ function TestCase(_val, _args) constructor {
 		if (!_isValid) {
 			__gmtl_internal_fn_stacktrace();
 			var _expected = is_undefined(_expectedMessage) ? "throw" : $"throw \"{_expectedMessage}\"";
+			var _expected_str = __not_str_expected == "" ? _expected : __not_str_expected + " " + _expected;
+			var _received_str = _threw ? "threw \"" + _thrownMessage + "\"" : "did not throw";
 			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toThrow({_expectedMessage ?? ""}):");
-			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _expected : $"{__not_str_expected} {_expected}"}");
-			array_push(gmtl_test_log, $"- Received Result: {_threw ? $"threw \"{_thrownMessage}\"" : "did not throw"}");
+			array_push(gmtl_test_log, $"- Expected Result: {_expected_str}");
+			array_push(gmtl_test_log, $"- Received Result: {_received_str}");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 		} else {

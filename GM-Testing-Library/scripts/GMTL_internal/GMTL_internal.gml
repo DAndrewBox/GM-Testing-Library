@@ -444,17 +444,32 @@ function __gmtl_internal_fn_find_coverage_files() {
 	
 	// If folder is not found, early return
 	if (array_length(_folders) == 0) return;
-		
+
 	// For every folder, find all *.gml files to find coverage for
+	// Skip folders starting with "GMTL_" unless they are explicitly whitelisted
+	static _coverage_whitelist = ["GMTL_demo_coverage_functions"];
 	var _coverage_files = [];
 	var _folders_len = array_length(_folders);
 	for (var i = 0; i < _folders_len; i++) {
-		var _file = file_find_first($"{_dir_path}scripts\\{_folders[i]}\\*.gml", fa_none);
+		var _folder = _folders[i];
+		// Skip internal GMTL_ scripts unless whitelisted
+		if (string_pos("GMTL_", _folder) == 1) {
+			var _whitelisted = false;
+			var _wl_len = array_length(_coverage_whitelist);
+			for (var w = 0; w < _wl_len; w++) {
+				if (_folder == _coverage_whitelist[w]) {
+					_whitelisted = true;
+					break;
+				}
+			}
+			if (!_whitelisted) continue;
+		}
+		var _file = file_find_first($"{_dir_path}scripts\\{_folder}\\*.gml", fa_none);
 		while (_file != "") {
-			array_push(_coverage_files, $"{_dir_path}scripts\\{_folders[i]}\\{_file}");
+			array_push(_coverage_files, $"{_dir_path}scripts\\{_folder}\\{_file}");
 			_file = file_find_next();
 		}
-			
+
 		file_find_close();
 	}
 		
@@ -513,29 +528,80 @@ function __gmtl_internal_fn_find_coverage_files() {
 	}
 }
 
+/// @func	__gmtl_internal_fn_coverage_mark(fn_name)
+/// @param	{String}	fn_name
+/// @ignore
+function __gmtl_internal_fn_coverage_mark(_fn_name) {
+	if (!gmtl_show_coverage) return;
+	var _files_len = array_length(gmtl_coverage_files);
+	for (var i = 0; i < _files_len; i++) {
+		var _fns = gmtl_coverage_files[i].fn_list;
+		var _fns_len = array_length(_fns);
+		for (var j = 0; j < _fns_len; j++) {
+			if (_fns[j].name == _fn_name) {
+				_fns[j].covered = true;
+				return;
+			}
+		}
+	}
+}
+
+/// @func	__gmtl_internal_fn_script_execute_ext(fn, args)
+/// @param	{Function}	fn
+/// @param	{Array}		args
+/// @ignore
+function __gmtl_internal_fn_script_execute_ext(_fn, _args = []) {
+	if (gmtl_show_coverage && !gmtl_has_finished && !gmtl_is_initializing) {
+		var _fn_name = "";
+		if (is_real(_fn) && script_exists(_fn)) {
+			_fn_name = script_get_name(_fn);
+		} else if (is_method(_fn)) {
+			var _idx = method_get_index(_fn);
+			if (script_exists(_idx)) {
+				_fn_name = script_get_name(_idx);
+			}
+		}
+		if (_fn_name != "" && _fn_name != "<undefined>" && string_pos("anon@", _fn_name) == 0) {
+			__gmtl_internal_fn_coverage_mark(_fn_name);
+		}
+	}
+	return original_script_execute_ext(_fn, _args);
+}
+
 /// @func	__gmtl_internal_fn_show_coverage_table()
 /// @ignore
 function __gmtl_internal_fn_show_coverage_table() {
 	var _coverage_len = array_length(gmtl_coverage_files);
-	show_debug_message("Coverage Results per File:");
+	var _total_fns = 0;
+	var _covered_fns = 0;
+
+	gmtl_coverage_table = $"{string_repeat("=", 23)} Coverage Report {string_repeat("=", 24)}\n";
+
 	for (var i = 0; i < _coverage_len; i++) {
 		var _functions = gmtl_coverage_files[i].fn_list;
 		var _functions_len = array_length(_functions);
-		gmtl_coverage_table += $"{gmtl_coverage_files[i].fn_name} (0%)\n";
+		var _file_covered = 0;
+
 		for (var j = 0; j < _functions_len; j++) {
-			var _cols = [
-				__gmtl_dep_fn_string_pad_right(string(_functions[j].coverage), " ", 2),
-				_functions[j].name,
-			];
-			var _cols_len = array_length(_cols);
-			gmtl_coverage_table += "\t"
-			for (var k = 0; k < _cols_len; k++) {
-				gmtl_coverage_table += _cols[k] + (k == 0 ? "| " : "");
-			}
-			gmtl_coverage_table += "\n";
+			if (_functions[j].covered) _file_covered++;
+		}
+
+		_total_fns   += _functions_len;
+		_covered_fns += _file_covered;
+
+		var _pct = __gmtl_dep_fn_string_percentage(_file_covered, _functions_len);
+		gmtl_coverage_table += $"{gmtl_coverage_files[i].fn_name} ({_file_covered}/{_functions_len} - {_pct})\n";
+
+		for (var j = 0; j < _functions_len; j++) {
+			var _icon = _functions[j].covered ? "✔" : "✘";
+			gmtl_coverage_table += $"\t{_icon} {_functions[j].name}\n";
 		}
 	}
-	
+
+	var _total_pct = __gmtl_dep_fn_string_percentage(_covered_fns, _total_fns);
+	gmtl_coverage_table += $"{string_repeat("=", 24)}\n";
+	gmtl_coverage_table += $"Total: {_covered_fns}/{_total_fns} functions covered ({_total_pct})\n";
+
 	show_debug_message(gmtl_coverage_table);
 }
 

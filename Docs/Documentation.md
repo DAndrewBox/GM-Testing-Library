@@ -60,6 +60,7 @@ This is the offline version of the official and up-to-date documentation for the
   - [simulateTimesource](#simulatetimesource)
   - [simulateCallLater](#simulatecalllater)
   - [simulateAsyncEvent](#simulateasyncevent)
+- [Coverage](#coverage)
 
 ---
 
@@ -76,6 +77,7 @@ You can find and change these definitions in the `Libraries/GMTL/Setup/GMTL_defi
 | ----------------------------- | ------------------------------------------------ | ------------- |
 | gmtl_run_at_start             | Run GMTL tests at game start.                    | true          |
 | gmtl_wait_frames_before_start | Frames to wait before start running GMTL suites. | 10            |
+| gmtl_show_coverage            | Print a function coverage report after tests.    | false         |
 
 ---
 
@@ -640,8 +642,9 @@ Because `async_load` is a read-only engine built-in that cannot be overridden by
 
 ```gml
 // In your object's Async - HTTP event - works in real builds AND under simulateAsyncEvent:
-http_status = async_load_map[? "status"];
-http_result = async_load_map[? "result"];
+var _map = async_load_map;
+http_status = _map[? "status"];
+http_result = _map[? "result"];
 ```
 
 | Parameter | Type | Description |
@@ -670,9 +673,10 @@ Example - object's async HTTP event handler:
 
 ```gml
 // In o_my_http_handler - Async - HTTP event:
-if (async_load_map[? "id"] == pending_request_id) {
-    last_status = async_load_map[? "status"];
-    last_result = async_load_map[? "result"];
+var _map = async_load_map;
+if (_map[? "id"] == pending_request_id) {
+    last_status = _map[? "status"];
+    last_result = _map[? "result"];
 }
 ```
 
@@ -702,7 +706,8 @@ Example - save/load handler and test:
 
 ```gml
 // In o_my_save_manager - Async - Save/Load event:
-last_saved_file = async_load_map[? "filename"];
+var _map = async_load_map;
+last_saved_file = _map[? "filename"];
 ```
 
 ```gml
@@ -725,3 +730,56 @@ suite(function() {
 
 > [!NOTE]
 > `simulateAsyncEvent` only fires the event handler synchronously. It does not perform real HTTP requests or file I/O. The `async_load` values you pass are exactly what your handler will see.
+
+---
+
+## Coverage ![](https://img.shields.io/badge/v1.2-00cbca?style=flat)
+
+GMTL includes a function-level coverage report that tracks which named functions in your project were exercised during the test run.
+
+### Enabling coverage
+
+Set `gmtl_show_coverage` to `true` in `GMTL_definitions.gml`:
+
+```gml
+#macro gmtl_show_coverage true
+```
+
+After all suites finish, a coverage report is printed to the debug console alongside the normal test output.
+
+### How coverage is tracked
+
+A function is marked **covered** when it is passed directly to `expect()` as the subject:
+
+```gml
+expect(my_function, [arg1, arg2]).toHaveReturnedWith(expected);
+```
+
+Functions called as plain expressions (e.g. `expect(my_function(arg))`) are **not** tracked - by the time `expect` receives the value, the function identity is lost. Always pass the function reference + args array to `expect` when you want coverage tracking.
+
+### Which files are scanned
+
+GMTL scans all scripts under the `scripts/` folder. Files whose folder name starts with `GMTL_` are excluded by default (internal library scripts), **except** those on the whitelist inside `__gmtl_internal_fn_find_coverage_files`. Currently whitelisted: `GMTL_demo_coverage_functions`.
+
+To include your own scripts, they must either not start with `GMTL_` (user scripts are always included) or be added to the whitelist.
+
+### Report format
+
+```
+======================= Coverage Report ========================
+my_utils.gml (3/4 - 75%)
+    ✔ utils_add
+    ✔ utils_subtract
+    ✔ utils_clamp
+    ✘ utils_uncalled
+========================
+Total: 3/4 functions covered (75%)
+```
+
+### Constraints
+
+> [!IMPORTANT]
+> Coverage is **function-level only**. Line-level coverage is not possible in GML without engine instrumentation hooks.
+
+> [!NOTE]
+> Anonymous functions (lambdas) are never tracked - only named functions defined with `function name()` at script scope are indexed.

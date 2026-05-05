@@ -33,6 +33,17 @@ function async_load_sim() {
 /// @func	spy(fn)
 /// @param	{Function | Asset.GMScript}	fn
 function spy(_fn) {
+	// Mark coverage for the wrapped function at spy creation time
+	if (gmtl_show_coverage && is_callable(_fn)) {
+		var _idx = is_method(_fn) ? method_get_index(_fn) : _fn;
+		if (is_real(_idx) && script_exists(_idx)) {
+			var _fn_name = script_get_name(_idx);
+			if (_fn_name != "" && _fn_name != "<undefined>" && string_pos("anon@", _fn_name) == 0) {
+				__gmtl_internal_fn_coverage_mark(_fn_name);
+			}
+		}
+	}
+
 	var _spy = {
 		__gmtl_spy: true,
 		calls:      0,

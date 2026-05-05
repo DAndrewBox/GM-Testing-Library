@@ -90,15 +90,20 @@ function __gmtl_init() {
 
 	// Run all tests a few frames after project start.
 	original_call_later(gmtl_wait_frames_before_start, time_source_units_frames, function() {
-		//__gmtl_internal_fn_find_coverage_files();	// @TODO: Feature not ready. Possibly v1.2.
-		
+		if (gmtl_show_coverage) {
+			__gmtl_internal_fn_find_coverage_files();
+		}
+
 		var _t_start = get_timer();
 		var _suites_len = array_length(gmtl_suite_list);
 		for (var i = 0; i < _suites_len; i++) {
 			__gmtl_internal_fn_call_suite(gmtl_suite_list[i]);
 		}
 		__gmtl_internal_fn_finish_suites(_t_start);
-		// __gmtl_internal_fn_show_coverage_table(); // @TODO: Feature not ready. Possibly v1.2.
+
+		if (gmtl_show_coverage) {
+			__gmtl_internal_fn_show_coverage_table();
+		}
 		
 		// Clean memory
 		delete gmtl_internal.tests;

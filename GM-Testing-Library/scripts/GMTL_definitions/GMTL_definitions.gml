@@ -1,15 +1,17 @@
 /*
 	User defined properties.
 	You can edit the value here if needed.
-	
+
 	Name							|	Description											|	Default Value
 	----------------------------------------------------------------------------------------------------------
 	gmtl_run_at_start				|	Run GMTL tests at game start.						|	true
 	gmtl_wait_frames_before_start	|	Frames to wait before start running GMTL suites.	|	10
+	gmtl_show_coverage				|	Show function coverage report after tests finish.	|	true
 
 */
 #macro	gmtl_run_at_start					true
 #macro	gmtl_wait_frames_before_start		10
+#macro	gmtl_show_coverage					true
 
 /*
 	* Internal GTML definitions.
@@ -64,7 +66,9 @@
 #macro	original_mouse_check_button_pressed		mouse_check_button_pressed
 #macro	original_mouse_check_button_released	mouse_check_button_released
 #macro	original_io_clear						io_clear
+// Feather ignore GM1030
 #macro	mouse_x									__gmtl_internal_fn_mouse_get_x()
+// Feather ignore GM1030
 #macro	mouse_y									__gmtl_internal_fn_mouse_get_y()
 
 #macro	mouse_check_button						__gmtl_internal_fn_mouse_check_button
@@ -84,6 +88,12 @@
 #macro	gamepad_button_check					__gmtl_internal_fn_gamepad_button_check
 #macro	gamepad_button_check_pressed			__gmtl_internal_fn_gamepad_button_check_pressed
 #macro	gamepad_button_check_released			__gmtl_internal_fn_gamepad_button_check_released
+
+/**
+	* Intercept script_execute_ext to track function coverage during tests.
+*/
+#macro	original_script_execute_ext	script_execute_ext
+#macro	script_execute_ext			__gmtl_internal_fn_script_execute_ext
 
 /**
 	* Drop-in replacement for async_load that works in both real and simulated async events.

@@ -710,3 +710,57 @@ suite(function() {
 		});
 	});
 });
+
+
+// Coverage demo - enable gmtl_show_coverage in GMTL_definitions to see the report
+// coverage_uncalled_function() is intentionally never tested - it shows as uncovered
+suite(function() {
+	describe("Coverage demo - math functions", function() {
+		it("coverage_add returns correct sum", function() {
+			expect(coverage_add, [3, 4]).toHaveReturnedWith(7);
+		});
+
+		it("coverage_subtract returns correct difference", function() {
+			expect(coverage_subtract, [10, 3]).toHaveReturnedWith(7);
+		});
+
+		it("coverage_multiply returns correct product", function() {
+			expect(coverage_multiply, [4, 5]).toHaveReturnedWith(20);
+		});
+
+		it("coverage_divide returns correct quotient", function() {
+			expect(coverage_divide, [10, 2]).toHaveReturnedWith(5);
+		});
+
+		it("coverage_divide returns undefined when dividing by zero", function() {
+			expect(coverage_divide, [5, 0]).toHaveReturnedWith(undefined);
+		});
+
+		it("coverage_clamp clamps value within range", function() {
+			expect(coverage_clamp, [15, 0, 10]).toHaveReturnedWith(10);
+		});
+
+		it("coverage_is_even correctly identifies even numbers", function() {
+			expect(coverage_is_even, [4]).toHaveReturnedWith(true);
+			expect(coverage_is_even, [7]).toHaveReturnedWith(false);
+		});
+	});
+});
+
+suite(function() {
+	describe("Coverage demo - string and array functions", function() {
+		it("coverage_string_reverse reverses a string", function() {
+			expect(coverage_string_reverse, ["hello"]).toHaveReturnedWith("olleh");
+		});
+
+		it("coverage_array_sum sums all elements", function() {
+			expect(coverage_array_sum, [[1, 2, 3, 4, 5]]).toHaveReturnedWith(15);
+		});
+
+		it("coverage_fibonacci returns correct values", function() {
+			expect(coverage_fibonacci, [0]).toHaveReturnedWith(0);
+			expect(coverage_fibonacci, [1]).toHaveReturnedWith(1);
+			expect(coverage_fibonacci, [7]).toHaveReturnedWith(13);
+		});
+	});
+});

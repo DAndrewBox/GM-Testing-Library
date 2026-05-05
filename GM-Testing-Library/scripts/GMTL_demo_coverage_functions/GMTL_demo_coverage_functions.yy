@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GMTL_demo_coverage_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GMTL_demo_coverage_functions",
+  "parent":{
+    "name":"Demo",
+    "path":"folders/Libraries/GMTL/Demo.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

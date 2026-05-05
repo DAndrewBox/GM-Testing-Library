@@ -52,6 +52,7 @@
     {"id":{"name":"GMTL_core_TestCase","path":"scripts/GMTL_core_TestCase/GMTL_core_TestCase.yy",},},
     {"id":{"name":"GMTL_core_TimeSource","path":"scripts/GMTL_core_TimeSource/GMTL_core_TimeSource.yy",},},
     {"id":{"name":"GMTL_definitions","path":"scripts/GMTL_definitions/GMTL_definitions.yy",},},
+    {"id":{"name":"GMTL_demo_coverage_functions","path":"scripts/GMTL_demo_coverage_functions/GMTL_demo_coverage_functions.yy",},},
     {"id":{"name":"GMTL_demo_tests","path":"scripts/GMTL_demo_tests/GMTL_demo_tests.yy",},},
     {"id":{"name":"GMTL_dependencies","path":"scripts/GMTL_dependencies/GMTL_dependencies.yy",},},
     {"id":{"name":"GMTL_enums","path":"scripts/GMTL_enums/GMTL_enums.yy",},},

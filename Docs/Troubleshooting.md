@@ -21,9 +21,12 @@ Since v1.2, async event handlers can be tested using `simulateAsyncEvent()`. It 
 ```gml
 // In your object's Async - HTTP event:
 // Change:  async_load[? "status"]
-// To:      async_load_map[? "status"]
-http_status = async_load_map[? "status"];
-http_result = async_load_map[? "result"];
+// To:      var _map = async_load_map;
+//          _map[? "status"]
+
+var _map = async_load_map;
+http_status = _map[? "status"];
+http_result = _map[? "result"];
 ```
 
 ```gml
@@ -44,6 +47,42 @@ suite(function() {
 ```
 
 See the [simulateAsyncEvent](#simulateasyncevent) section in the documentation for the full list of async event constants and examples.
+
+---
+
+### Coverage report shows 0% for all functions
+
+Functions are only marked covered when passed as a **reference** to `expect()`, not when called as plain expressions.
+
+```gml
+// NOT tracked - function is called before expect() sees it:
+expect(my_function(1, 2)).toBe(3);
+
+// TRACKED - function reference + args passed to expect():
+expect(my_function, [1, 2]).toHaveReturnedWith(3);
+```
+
+---
+
+### Coverage report shows 0% and no files are listed
+
+The coverage file scanner only runs when `gmtl_show_coverage = true`. Check `GMTL_definitions.gml`:
+
+```gml
+#macro gmtl_show_coverage true
+```
+
+Also confirm your script files are not inside a folder starting with `GMTL_` - those are excluded by default (internal library scripts). User scripts in any other folder are always scanned.
+
+---
+
+### My functions don't appear in the coverage report
+
+The scanner only indexes top-level named functions (`function name() { ... }`) defined at script scope. It skips:
+- Functions whose folder starts with `GMTL_` (unless whitelisted)
+- Anonymous / lambda functions
+- Constructor methods defined inside a constructor body
+- Lines containing `@`, `//`, `__`, or `new `
 
 ---
 
