@@ -1,6 +1,6 @@
 /*
 	GameMaker Testing Library
-	Version: v1.2c
+	Version: v1.2
 	Release date: 2026-05-04
 	Author:	DAndrëwBox
 	https://github.com/DAndrewBox/GM-Testing-Library
