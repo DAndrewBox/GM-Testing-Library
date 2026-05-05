@@ -15,4 +15,4 @@ _No bug fixes introduced in this update_
 
 ---
 
-**Full Changelog**: https://github.com/DAndrewBox/GM-Testing-Library/compare/vX.X.X-PREV...vX.X.X
+[Insert full changelog here]
