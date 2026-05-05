@@ -31,9 +31,10 @@ function __gmtl_setup() {
 			log:	[],
 			status: __gmtl_test_status.RUN,
 			before_all: noone,
+			before_all_ran: false,
 			after_all: noone,
-			before_each: noone,
-			after_each: noone,
+			before_each: [],
+			after_each: [],
 		},
 		suites: {
 			list:				[],

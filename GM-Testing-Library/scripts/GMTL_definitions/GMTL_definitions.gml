@@ -33,6 +33,7 @@
 #macro	gmtl_is_initializing		__gmtl_internal_fn_is_initializing()
 
 #macro	gmtl_test_before_all		gmtl_internal.tests.before_all
+#macro	gmtl_test_before_all_ran	gmtl_internal.tests.before_all_ran
 #macro	gmtl_test_after_all			gmtl_internal.tests.after_all
 #macro	gmtl_test_before_each		gmtl_internal.tests.before_each
 #macro	gmtl_test_after_each		gmtl_internal.tests.after_each

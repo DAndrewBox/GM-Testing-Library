@@ -43,12 +43,12 @@ function afterAll(_fn) {
 /// @param	{Function | Asset.GMScript}	fn
 function beforeEach(_fn) {
 	_fn = __gmtl_internal_fn_get_fn_index(_fn);
-	gmtl_test_before_each = _fn;
+	array_push(gmtl_test_before_each, _fn);
 }
 
 /// @func	afterEach(fn)
 /// @param	{Function | Asset.GMScript}	fn
 function afterEach(_fn) {
 	_fn = __gmtl_internal_fn_get_fn_index(_fn);
-	gmtl_test_after_each = _fn;
+	array_push(gmtl_test_after_each, _fn);
 }

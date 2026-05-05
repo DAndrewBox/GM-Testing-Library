@@ -372,9 +372,206 @@ suite(function() {
 			it("This should always pass", function () {
 				expect(1).toBeEqual(1);
 			});
-			
+
 			it("This should always fail", function () {
 				expect(1 + 2).toBeEqual(5);
+			});
+		});
+	});
+});
+
+suite(function() {
+	describe("Nested beforeEach - given", function() {
+		a = [];
+
+		beforeEach(function() {
+			array_push(a, 1);
+		});
+
+		describe("when", function() {
+			beforeEach(function() {
+				array_push(a, 2);
+			});
+
+			it("then - should execute all ancestor beforeEach hooks in order", function() {
+				expect(a).toBeEqual([1, 2]);
+			});
+		});
+	});
+});
+
+suite(function() {
+	describe("Lifecycle hooks - beforeEach resets state per test", function() {
+		counter = 0;
+
+		beforeEach(function() {
+			counter = 0;
+		});
+
+		it("counter starts at 0", function() {
+			expect(counter).toBe(0);
+		});
+
+		it("counter incremented once is 1", function() {
+			counter++;
+			expect(counter).toBe(1);
+		});
+
+		it("counter still starts at 0 (beforeEach reset)", function() {
+			expect(counter).toBe(0);
+		});
+	});
+});
+
+suite(function() {
+	describe("Lifecycle hooks - afterEach runs after each test", function() {
+		log = [];
+
+		afterEach(function() {
+			array_push(log, "after");
+		});
+
+		it("first test - log is empty before afterEach runs", function() {
+			expect(log).toBeEqual([]);
+		});
+
+		it("second test - log has one 'after' from previous test", function() {
+			expect(log).toBeEqual(["after"]);
+		});
+
+		it("third test - log has two 'after' entries", function() {
+			expect(log).toBeEqual(["after", "after"]);
+		});
+	});
+});
+
+suite(function() {
+	describe("Lifecycle hooks - beforeAll and afterAll run once", function() {
+		setup_count = 0;
+		teardown_count = 0;
+
+		beforeAll(function() {
+			setup_count++;
+		});
+
+		afterAll(function() {
+			teardown_count++;
+		});
+
+		it("setup_count is 1 on first test", function() {
+			expect(setup_count).toBe(1);
+		});
+
+		it("setup_count is still 1 on second test (beforeAll ran once)", function() {
+			expect(setup_count).toBe(1);
+		});
+	});
+});
+
+suite(function() {
+	describe("Lifecycle hooks - all four combined", function() {
+		order = [];
+
+		beforeAll(function() {
+			array_push(order, "beforeAll");
+		});
+
+		beforeEach(function() {
+			array_push(order, "beforeEach");
+		});
+
+		afterEach(function() {
+			array_push(order, "afterEach");
+		});
+
+		it("test1 - order is: beforeAll, beforeEach, test1", function() {
+			array_push(order, "test1");
+			expect(order).toBeEqual(["beforeAll", "beforeEach", "test1"]);
+		});
+
+		it("test2 - order accumulates correctly across tests", function() {
+			array_push(order, "test2");
+			expect(order).toBeEqual([
+				"beforeAll",
+				"beforeEach", "test1", "afterEach",
+				"beforeEach", "test2",
+			]);
+		});
+
+		it("test3 - afterEach ran after test2, beforeEach ran before test3", function() {
+			array_push(order, "test3");
+			expect(order).toBeEqual([
+				"beforeAll",
+				"beforeEach", "test1", "afterEach",
+				"beforeEach", "test2", "afterEach",
+				"beforeEach", "test3",
+			]);
+		});
+	});
+});
+
+suite(function() {
+	describe("Lifecycle hooks - nested beforeEach and afterEach combined", function() {
+		log = [];
+
+		beforeEach(function() {
+			array_push(log, "outer-before");
+		});
+
+		afterEach(function() {
+			array_push(log, "outer-after");
+		});
+
+		describe("inner describe", function() {
+			beforeEach(function() {
+				array_push(log, "inner-before");
+			});
+
+			afterEach(function() {
+				array_push(log, "inner-after");
+			});
+
+			it("hooks fire in correct order: outer-before, inner-before, test, inner-after, outer-after", function() {
+				array_push(log, "test");
+				expect(log).toBeEqual(["outer-before", "inner-before", "test"]);
+			});
+
+			it("second test sees previous afterEach entries then its own setup", function() {
+				array_push(log, "test2");
+				expect(log).toBeEqual([
+					"outer-before", "inner-before", "test", "inner-after", "outer-after",
+					"outer-before", "inner-before", "test2",
+				]);
+			});
+		});
+	});
+});
+
+suite(function() {
+	describe("Lifecycle hooks - nested beforeAll scoped per describe", function() {
+		outer_init = 0;
+
+		beforeAll(function() {
+			outer_init = 10;
+		});
+
+		it("outer beforeAll sets outer_init to 10", function() {
+			expect(outer_init).toBe(10);
+		});
+
+		describe("inner describe with its own beforeAll", function() {
+			inner_init = 0;
+
+			beforeAll(function() {
+				inner_init = 99;
+			});
+
+			it("inner beforeAll sets inner_init to 99", function() {
+				expect(inner_init).toBe(99);
+			});
+
+			it("outer_init still 10 inside inner describe", function() {
+				expect(outer_init).toBe(10);
 			});
 		});
 	});
