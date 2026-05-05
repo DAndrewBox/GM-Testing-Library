@@ -477,7 +477,7 @@ function TestCase(_val, _args) constructor {
 		var _isSpy = is_struct(__internal_value) && variable_struct_exists(__internal_value, "__gmtl_spy");
 		if (!_isSpy) {
 			__gmtl_internal_fn_stacktrace();
-			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalled(): value is not a spy — wrap with spy()");
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalled(): value is not a spy - wrap with spy()");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 			return;
@@ -503,7 +503,7 @@ function TestCase(_val, _args) constructor {
 		var _isSpy = is_struct(__internal_value) && variable_struct_exists(__internal_value, "__gmtl_spy");
 		if (!_isSpy) {
 			__gmtl_internal_fn_stacktrace();
-			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalledTimes(): value is not a spy — wrap with spy()");
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalledTimes(): value is not a spy - wrap with spy()");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 			return;
@@ -529,7 +529,7 @@ function TestCase(_val, _args) constructor {
 		var _isSpy = is_struct(__internal_value) && variable_struct_exists(__internal_value, "__gmtl_spy");
 		if (!_isSpy) {
 			__gmtl_internal_fn_stacktrace();
-			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalledWith(): value is not a spy — wrap with spy()");
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalledWith(): value is not a spy - wrap with spy()");
 			gmtl_test_status = __gmtl_test_status.FAILED;
 			gmtl_suite_continue = false;
 			return;

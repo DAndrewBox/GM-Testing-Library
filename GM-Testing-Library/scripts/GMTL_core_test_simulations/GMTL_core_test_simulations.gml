@@ -119,6 +119,32 @@ function simulateTimeSource(_parent, _period, _unit, _callback, _args = undefine
 	return _new_ts;
 }
 
+/// @func	simulateAsyncEvent(event_number, async_data, inst_id)
+/// @param	{Real}			event_number
+/// @param	{Struct}		async_data
+/// @param	{Id.Instance}	inst_id
+function simulateAsyncEvent(_event_number, _async_data = {}, _inst_id = all) {
+	// Store simulated async_load data in a global ds_map.
+	// Handler code should read from gmtl_async_event_map during tests,
+	// or use the async_load_sim() helper which returns this map while tests run.
+	var _map = ds_map_create();
+	var _keys = variable_struct_get_names(_async_data);
+	var _keys_len = array_length(_keys);
+	for (var i = 0; i < _keys_len; i++) {
+		var _k = _keys[i];
+		_map[? _k] = _async_data[$ _k];
+	}
+
+	global.__gmtl_async_event_map = _map;
+
+	with (_inst_id) {
+		event_perform(ev_other, _event_number);
+	}
+
+	ds_map_destroy(_map);
+	global.__gmtl_async_event_map = -1;
+}
+
 /// @func	simulateCallLater(period, unit, callback, loop)
 /// @param	{Real}						period
 /// @param	{Constant.TimeSourceUnits}	unit

@@ -1,7 +1,7 @@
 /*
 	GameMaker Testing Library
-	Version: v1.1.1c
-	Release date: 2025-09-23
+	Version: v1.2c
+	Release date: 2026-05-04
 	Author:	DAndrëwBox
 	https://github.com/DAndrewBox/GM-Testing-Library
 */
@@ -23,6 +23,7 @@ gml_pragma("global", "__gmtl_init()");
 /// @func __gmtl_setup()
 /// @ignore
 function __gmtl_setup() {
+	global.__gmtl_async_event_map = -1;
 	gmtl_internal = {
 		indent:	0,
 		indent_describe_offset: 0,

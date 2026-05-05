@@ -12,7 +12,38 @@ It's known that with GUI scale changes the mouse_x and mouse_y variables are not
 
 ### How can I test async functions with GMTL?
 
-You cannot test async functions with GMTL. This is a known limitation of the library. I'm working on a solution for this, but it's not ready yet and it's not in the priority list unless more people request it.
+Since v1.2, async event handlers can be tested using `simulateAsyncEvent()`. It fires any GameMaker async event synchronously during a test with a fake `async_load` map you supply as a struct.
+
+**Required: use `async_load_map` instead of `async_load` in your handlers.**
+
+`async_load` is a read-only engine built-in that cannot be intercepted from script. GMTL provides `async_load_map` as a transparent drop-in replacement - it returns the real `async_load` in normal builds and the simulated map during tests.
+
+```gml
+// In your object's Async - HTTP event:
+// Change:  async_load[? "status"]
+// To:      async_load_map[? "status"]
+http_status = async_load_map[? "status"];
+http_result = async_load_map[? "result"];
+```
+
+```gml
+// In your test:
+suite(function() {
+  describe("HTTP handler", function() {
+    it("handles success response", function() {
+      var _inst = create(0, 0, o_my_handler);
+      simulateAsyncEvent(async_web, {
+        status: 0,
+        result: "{\"ok\":true}",
+      }, _inst);
+      expect(_inst.http_status).toBe(0);
+      instance_destroy(_inst);
+    });
+  });
+});
+```
+
+See the [simulateAsyncEvent](#simulateasyncevent) section in the documentation for the full list of async event constants and examples.
 
 ---
 

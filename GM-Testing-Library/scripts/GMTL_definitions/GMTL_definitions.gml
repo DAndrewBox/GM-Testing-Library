@@ -86,6 +86,29 @@
 #macro	gamepad_button_check_released			__gmtl_internal_fn_gamepad_button_check_released
 
 /**
+	* Drop-in replacement for async_load that works in both real and simulated async events.
+	* Use async_load_map[? "key"] in your async event handlers instead of async_load[? "key"].
+*/
+#macro	async_load_map	(global.__gmtl_async_event_map != -1 ? global.__gmtl_async_event_map : async_load)
+
+/**
+	* Async event sub-type constants for use with simulateAsyncEvent().
+	* These are ev_other subtypes matching GameMaker's .yy eventNum values.
+	* Pass as the first argument to simulateAsyncEvent().
+*/
+#macro	async_image_loaded		60
+#macro	async_audio_recording	61
+#macro	async_http				62
+#macro	async_web				62
+#macro	async_dialog			63
+#macro	async_networking		68
+#macro	async_steam				69
+#macro	async_social			70
+#macro	async_push_notification	71
+#macro	async_save_load			72
+#macro	async_system			75
+
+/**
 	* Time source functions.
 	* These functions are redefined to allow mocking and tracking of time sources created during tests.
 	* Original functions are still accessible with the "original_" prefix.

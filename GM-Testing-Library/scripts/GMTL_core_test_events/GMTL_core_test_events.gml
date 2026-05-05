@@ -25,6 +25,11 @@ function create(_x, _y, _obj, _params = {}) {
 	}
 }
 
+/// @func	async_load_sim()
+function async_load_sim() {
+	return global.__gmtl_async_event_map;
+}
+
 /// @func	spy(fn)
 /// @param	{Function | Asset.GMScript}	fn
 function spy(_fn) {

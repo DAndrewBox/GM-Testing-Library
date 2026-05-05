@@ -59,6 +59,7 @@ This is the offline version of the official and up-to-date documentation for the
   - [simulateEvent](#simulateevent)
   - [simulateTimesource](#simulatetimesource)
   - [simulateCallLater](#simulatecalllater)
+  - [simulateAsyncEvent](#simulateasyncevent)
 
 ---
 
@@ -628,3 +629,99 @@ This function creates a constructor that will be used to simulate the timesource
 The `simulateCallLater` function is used to simulate a [call_later()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/call_later.htm) event. This function will simulate a call later event for the specified callback. You can pass a callback, an optional array of arguments, an optional number of repetitions, and an optional loop flag to the function to simulate a call later event. The callback will be called after the specified number of frames.
 
 **If you want to strictly call the GameMaker's built-in function you can use `original_call_later()` directly in your code.**
+
+### simulateAsyncEvent ![](https://img.shields.io/badge/v1.2-00cbca?style=flat)
+
+`simulateAsyncEvent(event_number, [async_data], [instance_id])`
+
+The `simulateAsyncEvent` function fires a GameMaker [Async event](https://manual.gamemaker.io/monthly/en/#t=The_Asset_Editors%2FObject_Properties%2FAsync_Events.htm) on one or all instances synchronously during a test, with a fake `async_load` map populated from the struct you provide. This lets you test any code that reads `async_load` inside an async event handler - HTTP responses, save/load completions, dialogs, etc. - without making real network calls or file I/O.
+
+Because `async_load` is a read-only engine built-in that cannot be overridden by a macro, GMTL provides `async_load_map` - a drop-in replacement that transparently returns the simulated map during tests and the real `async_load` otherwise. **Replace `async_load` with `async_load_map` in your async event handlers** and they will work identically in both real builds and under `simulateAsyncEvent` with no guards or extra logic needed.
+
+```gml
+// In your object's Async - HTTP event - works in real builds AND under simulateAsyncEvent:
+http_status = async_load_map[? "status"];
+http_result = async_load_map[? "result"];
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `event_number` | Real | Async event constant (see table below). |
+| `async_data` | Struct | Key-value pairs to populate `async_load`. Defaults to `{}`. |
+| `instance_id` | Id.Instance | Instance to fire the event on. Defaults to `all`. |
+
+Available async event constants (defined by GMTL for use anywhere in test scripts):
+
+| Constant | Value | Event |
+|---|---|---|
+| `async_web` / `async_http` | 62 | HTTP requests |
+| `async_save_load` | 72 | File save/load |
+| `async_dialog` | 63 | Dialog boxes |
+| `async_networking` | 68 | Networking |
+| `async_steam` | 69 | Steam |
+| `async_social` | 70 | Social |
+| `async_push_notification` | 71 | Push notifications |
+| `async_audio_recording` | 61 | Audio recording |
+| `async_audio_playback` | 62 | Audio playback |
+| `async_image_loaded` | 60 | Image loaded |
+| `async_system` | 75 | System |
+
+Example - object's async HTTP event handler:
+
+```gml
+// In o_my_http_handler - Async - HTTP event:
+if (async_load_map[? "id"] == pending_request_id) {
+    last_status = async_load_map[? "status"];
+    last_result = async_load_map[? "result"];
+}
+```
+
+Example - testing the handler:
+
+```gml
+suite(function() {
+  section("HTTP async handler", function() {
+    it("should store status and result on success", function() {
+      var _inst = create(0, 0, o_my_http_handler);
+
+      simulateAsyncEvent(async_web, {
+        id:     _inst.pending_request_id,
+        status: 0,
+        result: "{\"token\":\"abc123\"}",
+      }, _inst);
+
+      expect(_inst.last_status).toBe(0);
+      expect(_inst.last_result).toBe("{\"token\":\"abc123\"}");
+      instance_destroy(_inst);
+    });
+  });
+});
+```
+
+Example - save/load handler and test:
+
+```gml
+// In o_my_save_manager - Async - Save/Load event:
+last_saved_file = async_load_map[? "filename"];
+```
+
+```gml
+suite(function() {
+  section("Save/Load async handler", function() {
+    it("should record filename on save complete", function() {
+      var _inst = create(0, 0, o_my_save_manager);
+
+      simulateAsyncEvent(async_save_load, {
+        status:   1,
+        filename: "slot1.sav",
+      }, _inst);
+
+      expect(_inst.last_saved_file).toBe("slot1.sav");
+      instance_destroy(_inst);
+    });
+  });
+});
+```
+
+> [!NOTE]
+> `simulateAsyncEvent` only fires the event handler synchronously. It does not perform real HTTP requests or file I/O. The `async_load` values you pass are exactly what your handler will see.

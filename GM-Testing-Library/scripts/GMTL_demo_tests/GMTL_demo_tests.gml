@@ -659,3 +659,54 @@ suite(function() {
 		});
 	});
 });
+
+suite(function() {
+	describe("simulateAsyncEvent - HTTP async event", function() {
+		it("should fire async HTTP event and read async_load data", function() {
+			var _inst = create(0, 0, o_gmtl_demo_async);
+
+			// Fake an HTTP response: status 0 = success, result = JSON string
+			simulateAsyncEvent(async_web, {
+				status: 0,
+				result: "{\"message\":\"ok\"}",
+			}, _inst);
+
+			// -999 = event fired but key missing, -1 = event never fired
+			expect(_inst.http_status).toBe(0);
+			expect(_inst.http_result).toBe("{\"message\":\"ok\"}");
+
+			instance_destroy(_inst);
+		});
+
+		it("should fire async HTTP event with error status -2", function() {
+			var _inst = create(0, 0, o_gmtl_demo_async);
+
+			simulateAsyncEvent(async_web, {
+				status: -2,
+				result: "",
+			}, _inst);
+
+			expect(_inst.http_status).toBe(-2);
+
+			instance_destroy(_inst);
+		});
+	});
+});
+
+suite(function() {
+	describe("simulateAsyncEvent - Save/Load async event", function() {
+		it("should fire async save event and read filename and status", function() {
+			var _inst = create(0, 0, o_gmtl_demo_async);
+
+			simulateAsyncEvent(async_save_load, {
+				status:   1,
+				filename: "save_slot_1.dat",
+			}, _inst);
+
+			expect(_inst.save_status).toBe(1);
+			expect(_inst.save_filename).toBe("save_slot_1.dat");
+
+			instance_destroy(_inst);
+		});
+	});
+});
