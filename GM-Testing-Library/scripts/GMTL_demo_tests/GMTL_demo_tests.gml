@@ -576,3 +576,86 @@ suite(function() {
 		});
 	});
 });
+
+suite(function() {
+	describe("toThrow - function throws any error", function() {
+		throwing_fn = function() {
+			throw { message: "something went wrong" };
+		};
+
+		safe_fn = function() {
+			return 42;
+		};
+
+		it("should detect any throw", function() {
+			expect(throwing_fn).toThrow();
+		});
+
+		it("should detect throw with matching message substring", function() {
+			expect(throwing_fn).toThrow("something went wrong");
+		});
+
+		it("should fail when message does not match", function() {
+			expect(throwing_fn).never().toThrow("different message");
+		});
+
+		it("should fail when function does not throw", function() {
+			expect(safe_fn).never().toThrow();
+		});
+
+		it("should pass with args forwarded to the throwing function", function() {
+			var _fn_with_args = function(_x) {
+				if (_x < 0) throw { message: "negative value" };
+			};
+			expect(_fn_with_args, [-1]).toThrow("negative value");
+		});
+	});
+});
+
+suite(function() {
+	describe("spy - toHaveBeenCalled / toHaveBeenCalledTimes / toHaveBeenCalledWith", function() {
+		spy_add    = function(_a, _b) { return _a + _b; };
+		spy_logger = function(_msg) { /* side-effect */ };
+
+		it("spy detects function was called", function() {
+			var _s = spy(spy_add);
+			_s.call([1, 2]);
+			expect(_s).toHaveBeenCalled();
+		});
+
+		it("spy tracks call count correctly", function() {
+			var _s = spy(spy_add);
+			_s.call([1, 2]);
+			_s.call([3, 4]);
+			_s.call([5, 6]);
+			expect(_s).toHaveBeenCalledTimes(3);
+		});
+
+		it("spy detects specific arguments", function() {
+			var _s = spy(spy_logger);
+			_s.call(["hello"]);
+			_s.call(["world"]);
+			expect(_s).toHaveBeenCalledWith(["hello"]);
+			expect(_s).toHaveBeenCalledWith(["world"]);
+		});
+
+		it("spy.never() passes when function was not called", function() {
+			var _s = spy(spy_add);
+			expect(_s).never().toHaveBeenCalled();
+		});
+
+		it("spy.reset() clears call history", function() {
+			var _s = spy(spy_add);
+			_s.call([1, 2]);
+			_s.reset();
+			expect(_s).never().toHaveBeenCalled();
+			expect(_s).toHaveBeenCalledTimes(0);
+		});
+
+		it("spy forwards return value from wrapped function", function() {
+			var _s = spy(spy_add);
+			var _result = _s.call([10, 5]);
+			expect(_result).toBe(15);
+		});
+	});
+});

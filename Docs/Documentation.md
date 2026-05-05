@@ -28,6 +28,7 @@ This is the offline version of the official and up-to-date documentation for the
   - [toHaveProperty](#tohaveproperty)
   - [toHaveReturned](#tohavereturned)
   - [toHaveReturnedWith](#tohavereturnedwith)
+  - [toThrow](#tothrow)
 - [Truthiness](#truthiness)
   - [toBeTruthy](#tobetruthy)
   - [toBeFalsy](#tobefalsy)
@@ -37,6 +38,11 @@ This is the offline version of the official and up-to-date documentation for the
   - [toBeGreaterThanOrEqual](#tobegreaterthanorequal)
   - [toBeLessThanOrEqual](#tobelessthanorequal)
 - [never](#never)
+- [Spies](#spies)
+  - [spy](#spy)
+  - [toHaveBeenCalled](#tohavebeencalled)
+  - [toHaveBeenCalledTimes](#tohavebeencalledtimes)
+  - [toHaveBeenCalledWith](#tohavebeencalledwith)
 - [Simulations](#simulations)
   - [create](#create)
   - [simulateKeyPress](#simulatekeypress)
@@ -250,23 +256,41 @@ So, the `beforeAll` function will run before all tests in the suite, the `before
 
 The `beforeEach` function is used to run a piece of code before each test in a section. This is useful when you want to set up some data before each test. You can put a `beforeEach` function in any section and it will run before each test in that section.
 
+When `describe` blocks are nested, **all ancestor `beforeEach` hooks run in order from outermost to innermost** before each test. This matches Jest/Vitest behaviour and allows shared setup to be split across describe levels.
+
+```gml
+describe("outer", function() {
+  beforeEach(function() { array_push(log, "outer"); });
+
+  describe("inner", function() {
+    beforeEach(function() { array_push(log, "inner"); });
+
+    it("test", function() {
+      // log is ["outer", "inner"] here
+    });
+  });
+});
+```
+
 ### afterEach
 
 `afterEach(callback)`
 
 The `afterEach` function is used to run a piece of code after each test in a section. This is useful when you want to clean up some data after each test. You can put an `afterEach` function in any section and it will run after each test in that section.
 
+When `describe` blocks are nested, **all ancestor `afterEach` hooks run in order from innermost to outermost** after each test.
+
 ### beforeAll
 
-`beforeAll(callback)`
+`beforeAll(callback)` ![](https://img.shields.io/badge/improved_v1.2-00cbca?style=flat)
 
-The `beforeAll` function is used to run a piece of code before all tests in a suite. This is useful when you want to set up some data before all tests. You can put a `beforeAll` function in any suite and it will run before all sections in that suite. You can also put a `beforeAll` function in a section and it will run before all tests in that section.
+The `beforeAll` function is used to run a piece of code once before all tests in a `describe` block. It is scoped to the `describe` it is declared in, each describe level has its own independent `beforeAll` that fires before the first test in that scope and does not affect parent or sibling scopes.
 
 ### afterAll
 
-`afterAll(callback)`
+`afterAll(callback)` ![](https://img.shields.io/badge/improved_v1.2-00cbca?style=flat)
 
-The `afterAll` function is used to run a piece of code after all tests in a suite. This is useful when you want to clean up some data after all tests. You can put an `afterAll` function in any suite and it will run after all sections in that suite. You can also put an `afterAll` function in a section and it will run after all tests in that section.
+The `afterAll` function is used to run a piece of code once after all tests in a `describe` block complete. Like `beforeAll`, it is scoped to the `describe` it is declared in.
 
 ---
 
@@ -315,6 +339,38 @@ The `toHaveReturned` matcher is used to check if the actual value has returned a
 `toHaveReturnedWith(expected)`
 
 The `toHaveReturnedWith` matcher is used to check if the actual value has returned the expected value. This matcher will check if the actual value is a function and has returned the expected value. It will throw an error if the actual value is not a function, or if it has not returned the expected value.
+
+### toThrow ![](https://img.shields.io/badge/v1.2-00cbca?style=flat)
+
+`toThrow([message])`
+
+The `toThrow` matcher is used to assert that a function throws when called. Pass the function directly to `expect()`, it will be called internally. An optional `message` string can be provided; if given, the test passes only if the thrown value's message contains that substring.
+
+Supports `never()` to assert a function does **not** throw.
+
+Example:
+
+```gml
+suite(function() {
+  section("My Section", function() {
+    test("My Test", function() {
+      var _parse = function(_input) {
+        if (_input == "") throw { message: "input is empty" };
+        return _input;
+      };
+
+      // Assert it throws any error
+      expect(_parse, [""]).toThrow();
+
+      // Assert it throws with a specific message substring
+      expect(_parse, [""]).toThrow("input is empty");
+
+      // Assert it does NOT throw
+      expect(_parse, ["hello"]).never().toThrow();
+    });
+  });
+});
+```
 
 ---
 
@@ -386,6 +442,69 @@ suite(function() {
     });
   });
 });
+```
+
+---
+
+## Spies ![](https://img.shields.io/badge/v1.2-00cbca?style=flat)
+
+Spies wrap a function to record how many times it was called and with what arguments. Create a spy with `spy(fn)`, call it via `spy.call([args])`, then assert with the matchers below.
+
+### spy
+
+`spy(fn)`
+
+Wraps `fn` and returns a spy struct with the following members:
+
+| Member | Type | Description |
+|---|---|---|
+| `calls` | Real | Number of times the spy was called |
+| `call_args` | Array | Array of argument arrays, one entry per call |
+| `call([args])` | Method | Calls the wrapped function, records the call, returns the result |
+| `reset()` | Method | Resets `calls` to 0 and clears `call_args` |
+
+Example:
+
+```gml
+var _add = function(_a, _b) { return _a + _b; };
+var _s = spy(_add);
+
+_s.call([1, 2]);
+_s.call([3, 4]);
+
+expect(_s).toHaveBeenCalledTimes(2);
+expect(_s).toHaveBeenCalledWith([1, 2]);
+```
+
+### toHaveBeenCalled
+
+`toHaveBeenCalled()`
+
+Passes if the spy was called at least once. Use `never()` to assert it was never called.
+
+```gml
+expect(_s).toHaveBeenCalled();
+expect(_s).never().toHaveBeenCalled();
+```
+
+### toHaveBeenCalledTimes
+
+`toHaveBeenCalledTimes(n)`
+
+Passes if the spy was called exactly `n` times.
+
+```gml
+expect(_s).toHaveBeenCalledTimes(3);
+```
+
+### toHaveBeenCalledWith
+
+`toHaveBeenCalledWith(args)`
+
+Passes if any recorded call matches the given `args` array exactly. `args` must be an array even for a single argument.
+
+```gml
+expect(_s).toHaveBeenCalledWith([1, 2]);
 ```
 
 ---

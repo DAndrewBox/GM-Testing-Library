@@ -431,6 +431,133 @@ function TestCase(_val, _args) constructor {
 		}
 	}
 	
+	/// @func toThrow(expected_message)
+	/// @param	{String}	[expected_message]
+	function toThrow(_expectedMessage = undefined) {
+		var _isCallable = !is_undefined(__internal_value) && is_callable(__internal_value);
+		if (!_isCallable) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toThrow(): value is not callable");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+			return;
+		}
+
+		var _threw = false;
+		var _thrownMessage = "";
+		var _fn_to_run = __gmtl_internal_fn_get_fn_index(__internal_value);
+		try {
+			script_execute_ext(_fn_to_run, __internal_args);
+		} catch(e) {
+			_threw = true;
+			_thrownMessage = is_struct(e) && variable_struct_exists(e, "message") ? e.message : string(e);
+		}
+
+		var _isValid = _threw;
+		if (_threw && !is_undefined(_expectedMessage)) {
+			_isValid = string_pos(string(_expectedMessage), _thrownMessage) > 0;
+		}
+
+		_isValid = __not ? !_isValid : _isValid;
+		if (!_isValid) {
+			__gmtl_internal_fn_stacktrace();
+			var _expected = is_undefined(_expectedMessage) ? "throw" : $"throw \"{_expectedMessage}\"";
+			array_push(gmtl_test_log, $"> expect({__internal_value}){__not_str_method}.toThrow({_expectedMessage ?? ""}):");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? _expected : $"{__not_str_expected} {_expected}"}");
+			array_push(gmtl_test_log, $"- Received Result: {_threw ? $"threw \"{_thrownMessage}\"" : "did not throw"}");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+		} else {
+			gmtl_test_status = __gmtl_test_status.SUCCESS;
+		}
+	}
+
+	/// @func toHaveBeenCalled()
+	function toHaveBeenCalled() {
+		var _isSpy = is_struct(__internal_value) && variable_struct_exists(__internal_value, "__gmtl_spy");
+		if (!_isSpy) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalled(): value is not a spy — wrap with spy()");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+			return;
+		}
+
+		var _isValid = __internal_value.calls > 0;
+		_isValid = __not ? !_isValid : _isValid;
+		if (!_isValid) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect(spy){__not_str_method}.toHaveBeenCalled():");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? "called at least once" : $"{__not_str_expected} called"}");
+			array_push(gmtl_test_log, $"- Received Result: called {__internal_value.calls} time(s)");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+		} else {
+			gmtl_test_status = __gmtl_test_status.SUCCESS;
+		}
+	}
+
+	/// @func toHaveBeenCalledTimes(n)
+	/// @param	{Real}	n
+	function toHaveBeenCalledTimes(_n) {
+		var _isSpy = is_struct(__internal_value) && variable_struct_exists(__internal_value, "__gmtl_spy");
+		if (!_isSpy) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalledTimes(): value is not a spy — wrap with spy()");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+			return;
+		}
+
+		var _isValid = __internal_value.calls == _n;
+		_isValid = __not ? !_isValid : _isValid;
+		if (!_isValid) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect(spy){__not_str_method}.toHaveBeenCalledTimes({_n}):");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? string(_n) : $"{__not_str_expected} {_n}"} call(s)");
+			array_push(gmtl_test_log, $"- Received Result: {__internal_value.calls} call(s)");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+		} else {
+			gmtl_test_status = __gmtl_test_status.SUCCESS;
+		}
+	}
+
+	/// @func toHaveBeenCalledWith(args)
+	/// @param	{Array}	args
+	function toHaveBeenCalledWith(_args) {
+		var _isSpy = is_struct(__internal_value) && variable_struct_exists(__internal_value, "__gmtl_spy");
+		if (!_isSpy) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect({__internal_value}).toHaveBeenCalledWith(): value is not a spy — wrap with spy()");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+			return;
+		}
+
+		var _isValid = false;
+		var _call_history = __internal_value.call_args;
+		var _history_len  = array_length(_call_history);
+		for (var i = 0; i < _history_len; i++) {
+			if (array_equals(_call_history[i], _args)) {
+				_isValid = true;
+				break;
+			}
+		}
+
+		_isValid = __not ? !_isValid : _isValid;
+		if (!_isValid) {
+			__gmtl_internal_fn_stacktrace();
+			array_push(gmtl_test_log, $"> expect(spy){__not_str_method}.toHaveBeenCalledWith({_args}):");
+			array_push(gmtl_test_log, $"- Expected Result: {__not_str_expected == "" ? string(_args) : $"{__not_str_expected} {_args}"}");
+			array_push(gmtl_test_log, $"- Received Result: {_history_len > 0 ? string(_call_history) : "never called"}");
+			gmtl_test_status = __gmtl_test_status.FAILED;
+			gmtl_suite_continue = false;
+		} else {
+			gmtl_test_status = __gmtl_test_status.SUCCESS;
+		}
+	}
+
 	/// @func toContain(value)
 	/// @param	{Any}	value
 	function toContain(_value) {

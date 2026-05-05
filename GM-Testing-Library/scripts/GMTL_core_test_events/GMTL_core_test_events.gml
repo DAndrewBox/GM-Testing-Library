@@ -25,6 +25,31 @@ function create(_x, _y, _obj, _params = {}) {
 	}
 }
 
+/// @func	spy(fn)
+/// @param	{Function | Asset.GMScript}	fn
+function spy(_fn) {
+	var _spy = {
+		__gmtl_spy: true,
+		calls:      0,
+		call_args:  [],
+		fn:         _fn,
+
+		/// @func	call(args)
+		call: function(_args = []) {
+			calls++;
+			array_push(call_args, _args);
+			return script_execute_ext(__gmtl_internal_fn_get_fn_index(fn), _args);
+		},
+
+		/// @func	reset()
+		reset: function() {
+			calls     = 0;
+			call_args = [];
+		},
+	};
+	return _spy;
+}
+
 /// @func	beforeAll(fn)
 /// @param	{Function | Asset.GMScript}	fn
 function beforeAll(_fn) {
