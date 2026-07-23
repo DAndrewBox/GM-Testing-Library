@@ -25,15 +25,16 @@ The minimum version of GameMaker required to use this library is **GameMaker 202
 
 ❌: Not compatible.
 
-| GameMaker Version | GMTL v1.0.x | GMTL v1.1.x |
-| ----------------: | :---------: | :---------: |
-|      Studio 1.4.x |     ❌      |     ❌      |
-|    Studio 2 - 2.2 |     ❌      |     ❌      |
-|      Studio 2.3.x |     ❌      |     ❌      |
-| 2022.x & 2022 LTS |     ❌      |     ❌      |
-|   2023.1 - 2023.3 |     ⚠️      |     ❌      |
-|  2023.4 - 2023.11 |     ✅      |     ✅      |
-|          2023 LTS |     ✅      |     ✅      |
-| 2024.x / 2024 LTS |    ✅\*     |    ✅\*     |
+| GameMaker Version | GMTL v1.0.x | GMTL v1.1.x | GMTL v1.2.x |
+| ----------------: | :---------: | :---------: | :---------: |
+|      Studio 1.4.x |      ❌      |      ❌      |      ❌      |
+|    Studio 2 - 2.2 |      ❌      |      ❌      |      ❌      |
+|      Studio 2.3.x |      ❌      |      ❌      |      ❌      |
+| 2022.x & 2022 LTS |      ❌      |      ❌      |      ❌      |
+|   2023.1 - 2023.3 |      ⚠️      |      ❌      |      ❌      |
+|  2023.4 - 2023.11 |      ✅      |      ✅      |      ⚠️      |
+|          2023 LTS |      ✅      |      ✅      |      ✅      |
+| 2024.x / 2024 LTS |      ✅      |     ✅\*     |      ✅      |
+|          2026 LTS |      ✅      |      ✅      |     ✅\*     |
 
 > [!NOTE] > **Author's comment:** Depending if anyone is interested in using this library with older versions of GameMaker, I could make a version compatible up to **GameMaker Studio 2.3.7** as I did with the compatibility update in the [**GML-Extended**](https://github.com/DAndrewBox/GML-Extended/) library.

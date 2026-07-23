@@ -23,6 +23,11 @@ gml_pragma("global", "__gmtl_init()");
 /// @func __gmtl_setup()
 /// @ignore
 function __gmtl_setup() {
+	// Idempotent: never wipe an already-initialized state. Suites are registered
+	// synchronously by suite() and, depending on the game's global-init order, that can
+	// happen before this pragma runs. A second setup call must not discard them.
+	if (variable_global_exists("__gmtl_internal")) return;
+
 	global.__gmtl_async_event_map = -1;
 	gmtl_internal = {
 		indent:	0,
@@ -73,6 +78,7 @@ function __gmtl_setup() {
 		},
 		timesources: [],
 		initializing: true,
+		running: false,
 		finished: false,
 	};
 }
@@ -96,9 +102,16 @@ function __gmtl_init() {
 
 		var _t_start = get_timer();
 		var _suites_len = array_length(gmtl_suite_list);
+
+		// Mocking is only active while suites are actually executing. Any timesource,
+		// input, etc. created by game/library code OUTSIDE this window hits the real
+		// engine functions. Prevents boot-window timesources from being silently mocked.
+		gmtl_internal.running = true;
 		for (var i = 0; i < _suites_len; i++) {
 			__gmtl_internal_fn_call_suite(gmtl_suite_list[i]);
 		}
+		gmtl_internal.running = false;
+
 		__gmtl_internal_fn_finish_suites(_t_start);
 
 		if (gmtl_show_coverage) {

@@ -50,20 +50,36 @@ function __gmtl_internal_fn_is_initializing() {
 	if (!variable_global_exists("__gmtl_internal")) {
 		__gmtl_setup();
 	}
-	
+
 	return gmtl_internal.initializing;
+}
+
+/// @func	__gmtl_internal_fn_is_running()
+/// @desc	True only while test suites are actively executing. Mocks gate on this so
+///			game/library code that runs before or after the test window is never mocked.
+/// @ignore
+function __gmtl_internal_fn_is_running() {
+	if (!variable_global_exists("__gmtl_internal")) {
+		__gmtl_setup();
+	}
+
+	return gmtl_internal.running;
 }
 
 
 /// @func	__gmtl_internal_fn_suite_add_to_queue(suite)
 /// @param	{Function}	suite
+/// @desc	Registers a suite synchronously. Runs at global-init time (before the test
+///			run is scheduled), so it must tolerate being called before the setup pragma;
+///			__gmtl_setup() is idempotent and lazily created here if needed.
 /// @ignore
 function __gmtl_internal_fn_suite_add_to_queue(_suite) {
-	var _ts = time_source_create(time_source_game, 2, time_source_units_frames, function(_suite) {
-		array_push(gmtl_suite_list, _suite);
-		gmtl_coverage_suites.total++;
-	}, [_suite]);
-	time_source_start(_ts);
+	if (!variable_global_exists("__gmtl_internal")) {
+		__gmtl_setup();
+	}
+
+	array_push(gmtl_suite_list, _suite);
+	gmtl_coverage_suites.total++;
 }
 
 /// @func	__gmtl_internal_fn_wait_for(instance, time, unit)
@@ -127,10 +143,10 @@ function __gmtl_internal_fn_stacktrace() {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_keyboard_check(_btn) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		return gmtl_internal.keys[$ _btn];
 	}
-	
+
 	return original_keyboard_check(_btn);
 }
 
@@ -138,10 +154,10 @@ function __gmtl_internal_fn_keyboard_check(_btn) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_keyboard_check_pressed(_btn) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		return gmtl_internal.keys[$ _btn];
 	}
-	
+
 	return original_keyboard_check_pressed(_btn);
 }
 
@@ -149,11 +165,11 @@ function __gmtl_internal_fn_keyboard_check_pressed(_btn) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_keyboard_check_released(_btn) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		return (struct_exists(gmtl_internal.keys, string(_btn)) && !gmtl_internal.keys[$ _btn]);
 	}
-	
-	return original_keyboard_check_released(_btn); 
+
+	return original_keyboard_check_released(_btn);
 }
 
 /// @func	__gmtl_internal_fn_keyboard_clear(button)
@@ -169,7 +185,11 @@ function __gmtl_internal_fn_keyboard_clear(_btn) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_gamepad_button_check(_device, _btn) {
-	return original_gamepad_button_check(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
+	if (gmtl_is_running) {
+		return original_gamepad_button_check(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
+	}
+
+	return original_gamepad_button_check(_device, _btn);
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check_pressed(device, button)
@@ -177,7 +197,11 @@ function __gmtl_internal_fn_gamepad_button_check(_device, _btn) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_gamepad_button_check_pressed(_device, _btn) {
-	return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
+	if (gmtl_is_running) {
+		return original_gamepad_button_check_pressed(_device, _btn) || gmtl_internal.gamepad[_device][$ _btn];
+	}
+
+	return original_gamepad_button_check_pressed(_device, _btn);
 }
 
 /// @func	__gmtl_internal_fn_gamepad_button_check_released(device, button)
@@ -185,7 +209,11 @@ function __gmtl_internal_fn_gamepad_button_check_pressed(_device, _btn) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_gamepad_button_check_released(_device, _btn) {
-	return original_gamepad_button_check_released(_device, _btn) || !gmtl_internal.gamepad[_device][$ _btn];
+	if (gmtl_is_running) {
+		return original_gamepad_button_check_released(_device, _btn) || !gmtl_internal.gamepad[_device][$ _btn];
+	}
+
+	return original_gamepad_button_check_released(_device, _btn);
 }
 
 /// @func	__gmtl_internal_fn_mouse_button_to_map(button)
@@ -224,7 +252,7 @@ function __gmtl_internal_fn_mouse_check_anykey(_expected, _state) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_mouse_check_button(_btn) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		if (_btn == mb_any) {
 			return __gmtl_internal_fn_mouse_check_anykey(true, "hold") || __gmtl_internal_fn_mouse_check_anykey(true, "press");
 		}
@@ -244,8 +272,8 @@ function __gmtl_internal_fn_mouse_check_button(_btn) {
 /// @func	__gmtl_internal_fn_mouse_check_button_pressed(button)
 /// @param	{Real}	button
 /// @ignore
-function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {	
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {
+	if (gmtl_is_running) {
 		if (_btn == mb_any) {
 			return __gmtl_internal_fn_mouse_check_anykey(true, "press");
 		}
@@ -265,7 +293,7 @@ function __gmtl_internal_fn_mouse_check_button_pressed(_btn) {
 /// @param	{Real}	button
 /// @ignore
 function __gmtl_internal_fn_mouse_check_button_released(_btn) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		if (_btn == mb_any) {
 			return __gmtl_internal_fn_mouse_check_anykey(true, "release");
 		}
@@ -297,7 +325,7 @@ function __gmtl_internal_fn_mouse_reset() {
 /// @func	__gmtl_internal_fn_mouse_get_x()
 /// @ignore
 function __gmtl_internal_fn_mouse_get_x() {
-	if (gmtl_has_finished) {
+	if (!gmtl_is_running) {
 		var _x_camera = camera_get_view_x(view_camera[view_current]);
 		var _w_camera = camera_get_view_width(view_camera[view_current]);
 		var _w_window = window_get_width(); 
@@ -313,7 +341,7 @@ function __gmtl_internal_fn_mouse_get_x() {
 /// @func	__gmtl_internal_fn_mouse_get_y()
 /// @ignore
 function __gmtl_internal_fn_mouse_get_y() {
-	if (gmtl_has_finished) {
+	if (!gmtl_is_running) {
 		var _y_camera = camera_get_view_y(view_camera[view_current]);
 		var _h_camera = camera_get_view_height(view_camera[view_current]);
 		var _h_window = window_get_height(); 
@@ -551,7 +579,7 @@ function __gmtl_internal_fn_coverage_mark(_fn_name) {
 /// @param	{Array}		args
 /// @ignore
 function __gmtl_internal_fn_script_execute_ext(_fn, _args = []) {
-	if (gmtl_show_coverage && !gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_show_coverage && gmtl_is_running) {
 		var _fn_name = "";
 		if (is_real(_fn) && script_exists(_fn)) {
 			_fn_name = script_get_name(_fn);
@@ -632,7 +660,7 @@ function __gmtl_internal_fn_set_gamepad_button_state(_device, _btn, _press) {
 ///	@param	{Constant.TimeSourceExpiryType}	expiryType
 /// @ignore
 function __gmtl_internal_fn_time_source_create(_parent, _period, _units, _cb, _args = [], _reps = 1, _expiry = time_source_expire_nearest) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		var _ts = simulateTimeSource(_parent, _period, _units, _cb, _args, _reps, _expiry);
 		return _ts;
 	}
@@ -643,10 +671,10 @@ function __gmtl_internal_fn_time_source_create(_parent, _period, _units, _cb, _a
 ///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_start(_ts) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		_ts.start();
 		return;
-	}	
+	}
 	original_time_source_start(_ts);
 }
 
@@ -654,8 +682,8 @@ function __gmtl_internal_fn_time_source_start(_ts) {
 ///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_stop(_ts) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
-		_ts.stop();	
+	if (gmtl_is_running) {
+		_ts.stop();
 		return;
 	}
 	original_time_source_stop(_ts);
@@ -665,7 +693,7 @@ function __gmtl_internal_fn_time_source_stop(_ts) {
 ///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_pause(_ts) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		_ts.pause();
 		return;
 	}
@@ -676,7 +704,7 @@ function __gmtl_internal_fn_time_source_pause(_ts) {
 ///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_resume(_ts) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		_ts.resume();
 		return;
 	}
@@ -687,7 +715,7 @@ function __gmtl_internal_fn_time_source_resume(_ts) {
 ///	@param	{Any}	id
 /// @ignore
 function __gmtl_internal_fn_time_source_destroy(_ts) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		var _all_ts_len = array_length(gmtl_timesources);
 		for (var i = 0; i < _all_ts_len; i++) {
 			if (is_struct(gmtl_timesources[i]) && gmtl_timesources[i].__internal_id == _ts.__internal_id) {
@@ -704,6 +732,26 @@ function __gmtl_internal_fn_time_source_destroy(_ts) {
 	original_time_source_destroy(_ts);
 }
 
+///	@func	__gmtl_internal_fn_time_source_exists(id)
+///	@param	{Any}	id
+/// @desc	Mocked timesources are structs (GMTL_TimeSource); real ones are numeric ids.
+///			A mocked timesource "exists" while it is still tracked in gmtl_timesources,
+///			so it stays true after stop() and becomes false after destroy(), matching
+///			the engine. Real ids fall through to the original function.
+/// @ignore
+function __gmtl_internal_fn_time_source_exists(_ts) {
+	if (is_struct(_ts)) {
+		var _len = array_length(gmtl_timesources);
+		for (var i = 0; i < _len; i++) {
+			if (gmtl_timesources[i] == _ts) {
+				return true;
+			}
+		}
+		return false;
+	}
+	return original_time_source_exists(_ts);
+}
+
 ///	@func	__gmtl_internal_fn_call_later(period, units, callback, loop)
 ///	@param	{Real}						period
 ///	@param	{Constant.TimeSourceUnits}	units
@@ -711,7 +759,7 @@ function __gmtl_internal_fn_time_source_destroy(_ts) {
 ///	@param	{Bool}						loop
 /// @ignore
 function __gmtl_internal_fn_call_later(_period, _units, _cb, _loop = false) {
-	if (!gmtl_has_finished && !gmtl_is_initializing) {
+	if (gmtl_is_running) {
 		var _ts = simulateCallLater(_period, _units, _cb, _loop);
 		return _ts;
 	}

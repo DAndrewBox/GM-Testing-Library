@@ -33,6 +33,7 @@
 #macro	gmtl_timesources			gmtl_internal.timesources
 #macro	gmtl_has_finished			__gmtl_internal_fn_has_finished()
 #macro	gmtl_is_initializing		__gmtl_internal_fn_is_initializing()
+#macro	gmtl_is_running				__gmtl_internal_fn_is_running()
 
 #macro	gmtl_test_before_all		gmtl_internal.tests.before_all
 #macro	gmtl_test_before_all_ran	gmtl_internal.tests.before_all_ran
@@ -129,6 +130,7 @@
 #macro	original_time_source_pause		time_source_pause
 #macro	original_time_source_resume		time_source_resume
 #macro	original_time_source_destroy	time_source_destroy
+#macro	original_time_source_exists		time_source_exists
 #macro	original_call_later				call_later
 
 #macro	time_source_create				__gmtl_internal_fn_time_source_create
@@ -137,4 +139,5 @@
 #macro	time_source_pause				__gmtl_internal_fn_time_source_pause
 #macro	time_source_resume				__gmtl_internal_fn_time_source_resume
 #macro	time_source_destroy				__gmtl_internal_fn_time_source_destroy
+#macro	time_source_exists				__gmtl_internal_fn_time_source_exists
 #macro	call_later						__gmtl_internal_fn_call_later

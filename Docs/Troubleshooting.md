@@ -79,6 +79,7 @@ Also confirm your script files are not inside a folder starting with `GMTL_` - t
 ### My functions don't appear in the coverage report
 
 The scanner only indexes top-level named functions (`function name() { ... }`) defined at script scope. It skips:
+
 - Functions whose folder starts with `GMTL_` (unless whitelisted)
 - Anonymous / lambda functions
 - Constructor methods defined inside a constructor body
@@ -105,3 +106,7 @@ This issue should be solved since v1.1.0, but if you still encounter it, you can
 I'm not really sure what causes this issue, but it seems to be related to the import process of the library that GameMaker does. If you encounter this issue, please [create an issue](https://github.com/DAndrewBox/GM-Testing-Library/issues) so I can investigate it further.
 
 ---
+
+### Timesources are not working in tests or not working when created before the test suite
+
+This issue is caused by the timesources not being initialized correctly in the test environment. It was fixed in v1.2.1, I heavily recommend updating to the latest version of the library if you encounter any issues before opening a new issue.

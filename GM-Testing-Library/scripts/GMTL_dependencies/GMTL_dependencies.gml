@@ -8,7 +8,10 @@ function __gmtl_dep_fn_string_percentage(_val, _max) {
 			var _n = power(10, _dec);
 			return round(_x * _n) / _n;
 		}
-		
+
+		// Guard against divide-by-zero when there are no suites/tests/functions to report.
+		if (_max == 0) return 0;
+
 		return round_dec(100 * (_val / _max), 2);
 	}
 	return string(percentage(_val, _max)) + "%";

@@ -764,3 +764,76 @@ suite(function() {
 		});
 	});
 });
+
+// Regression - timesource mocking scope
+// Guards the regression reported in the GitHub issue: timesources created by game / 3rd-party
+// code during the boot window were being silently mocked (returned unusable structs that
+// never ticked and were unknown to time_source_exists). Mocking must be scoped to the
+// window where suites are actually executing (gmtl_is_running), and time_source_exists
+// must recognize mocked timesources.
+suite(function() {
+	describe("Regression - timesource mocking is scoped to the test run", function() {
+		// Issue repro: the exact symptom the user hit - time_source_exists() returning
+		// false for a freshly created/started timesource.
+		it("time_source_exists() recognizes a mocked timesource through its lifecycle", function() {
+			var _ts = time_source_create(time_source_game, 2, time_source_units_seconds, show_debug_message, ["Hello World"], -1);
+			expect(time_source_exists(_ts)).toBeTruthy();	// exists after creation
+
+			time_source_start(_ts);
+			expect(time_source_exists(_ts)).toBeTruthy();	// exists after starting
+
+			time_source_destroy(_ts);
+			expect(time_source_exists(_ts)).toBeFalsy();	// gone after destroy
+		});
+
+		// End-to-end through the PUBLIC time_source_create / time_source_start macros
+		// (not simulateTimeSource) so the mock create+start path is exercised.
+		it("time_source_create() + time_source_start() fire the callback during simulated frames", function() {
+			var _inst = create(100, 100, o_gmtl_demo_timer);
+			expect(_inst.timer_test_value).toBeEqual(0);
+
+			var _ts = time_source_create(time_source_game, 5, time_source_units_frames, function(_inst) {
+				_inst.timer_test_value = 100;
+			}, [_inst], 1);
+			time_source_start(_ts);
+
+			simulateFrameWait(5);
+			expect(_inst.timer_test_value).toBeEqual(100);
+
+			instance_destroy(_inst);
+		});
+
+		// PUBLIC call_later macro should be mocked and fire during simulated frames too.
+		it("call_later() is mocked and fires during simulated frames", function() {
+			global.__gmtl_reg_call_later = 0;
+			call_later(10, time_source_units_frames, function() {
+				global.__gmtl_reg_call_later = 77;
+			});
+
+			simulateFrameWait(10);
+			expect(global.__gmtl_reg_call_later).toBeEqual(77);
+		});
+
+		// The core fix: OUTSIDE the test-run window the mock must delegate to the real
+		// engine, so game / 3rd-party (Input, Scribble, ...) timesources work normally.
+		// We temporarily flip the internal running flag to emulate boot / normal gameplay.
+		it("timesources created outside the test-run window are REAL, not mocked", function() {
+			var _prev_running = gmtl_internal.running;
+			gmtl_internal.running = false;
+			try {
+				var _ts = time_source_create(time_source_game, 1, time_source_units_seconds, function() {}, [], 1);
+
+				// Real engine returns a numeric id, not a mocked GMTL_TimeSource struct.
+				expect(is_struct(_ts)).toBeFalsy();
+
+				// ...and the real engine recognizes it as existing.
+				expect(time_source_exists(_ts)).toBeTruthy();
+
+				time_source_destroy(_ts);
+			} finally {
+				// Always restore so a failure here cannot leak into other tests.
+				gmtl_internal.running = _prev_running;
+			}
+		});
+	});
+});

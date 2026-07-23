@@ -259,7 +259,7 @@ So, the `beforeAll` function will run before all tests in the suite, the `before
 
 The `beforeEach` function is used to run a piece of code before each test in a section. This is useful when you want to set up some data before each test. You can put a `beforeEach` function in any section and it will run before each test in that section.
 
-When `describe` blocks are nested, **all ancestor `beforeEach` hooks run in order from outermost to innermost** before each test. This matches Jest/Vitest behaviour and allows shared setup to be split across describe levels.
+When `describe` blocks are nested, **all ancestor `beforeEach` hooks run in order from outermost to innermost** before each test. This matches Jest/Vitest behavior and allows shared setup to be split across describe levels.
 
 ```gml
 describe("outer", function() {
@@ -617,9 +617,12 @@ The `simulateEvent` function is used to simulate an event for an object. This fu
 
 The `simulateTimesource` function is used to simulate a [timesource](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/Time_Sources.htm). This function takes the exact same parameters than a GameMaker native timesource, but it will not actually create a timesource, it will just virtually simulate the event. This is useful when you want to test pseudo-async events like a custom garbage collector or waiting some frames for an event to happen.
 
-This function creates a constructor that will be used to simulate the timesource and has 2 methods to call for it to work: `.start()` that mimics the behaviour of [time_source_start()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/time_source_start.htm), and `.stop()` that mimics the behaviour of [time_source_stop()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/time_source_stop.htm).
+This function creates a constructor that will be used to simulate the timesource and has 2 methods to call for it to work: `.start()` that mimics the behavior of [time_source_start()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/time_source_start.htm), and `.stop()` that mimics the behavior of [time_source_stop()](https://manual.gamemaker.io/lts/en/GameMaker_Language/GML_Reference/Time_Sources/time_source_stop.htm).
 
-**If you want to strictly call the GameMaker's built-in functions you can use `original_time_source_create()`, `original_time_source_start()`, etc**
+**If you want to strictly call the GameMaker's built-in functions during tests you can use `original_time_source_create()`, `original_time_source_start()`, `original_time_source_exists()`, etc**
+
+> [!IMPORTANT]
+> The library redefines `time_source_create`, `time_source_start`, `time_source_stop`, `time_source_pause`, `time_source_resume`, `time_source_destroy`, `time_source_exists` and `call_later` so they can be mocked during tests. Mocking is **only** active while your suites are actually running. Timesources created by your game or by third-party libraries (Input, Scribble, etc.) at boot or during normal gameplay hit the real GameMaker functions and behave normally. If you need the built-in behavior explicitly at any time, call the `original_` prefixed version.
 
 ### simulateCallLater ![](https://img.shields.io/badge/v1.1-00cbca?style=flat)
 
