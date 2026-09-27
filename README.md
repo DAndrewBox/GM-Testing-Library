@@ -18,7 +18,7 @@
 
 ---
 
-#### 🏆 This project has been nominated and won for the [**GameMaker Awards 2024**](https://gamemaker.io/es/blog/gamemaker-awards-2024-winners). Thanks a lot for your help!
+#### 🏆 This project has been nominated and won the **Best Tool** category on the [**GameMaker Awards 2024**](https://gamemaker.io/es/blog/gamemaker-awards-2024-winners). Thanks a lot for your support!
 
 <br />
 <p align="center">
